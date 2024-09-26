@@ -1,0 +1,15 @@
+{
+    "short_name": "TLG",
+    "name": "The Lucky Guy",
+    "icons": [
+        {
+            "src": "/icon.png",
+            "type": "image/png",
+            "sizes": "512x512"
+        }
+    ],
+    "start_url": "/",
+    "background_color": "#ffffff",
+    "theme_color": "#ffffff",
+    "display": "standalone"
+}
