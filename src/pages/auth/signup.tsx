@@ -18,6 +18,7 @@ interface RegistrationFormData {
     occupation: string
     lga: string
     ward: string
+    poll_unit: string
     passportPhoto: File | null
     votersCard: File | null
     nin: File | null
@@ -35,6 +36,7 @@ export default function RegistrationFlow() {
         occupation: '',
         lga: '',
         ward: '',
+        poll_unit: '',
         passportPhoto: null,
         votersCard: null,
         nin: null,
@@ -138,6 +140,11 @@ export default function RegistrationFlow() {
                                                 )) : <SelectItem value="empty" disabled>Select an LGA first</SelectItem>}
                                             </SelectContent>
                                         </Select>
+                                    </div>
+
+                                    <div className="space-y-2">
+                                        <Label htmlFor="poll_unit">Polling Unit</Label>
+                                        <Input id="poll_unit" name="poll_unit" required value={formData.occupation} onChange={handleInputChange} />
                                     </div>
                                 </div>
                             )}
