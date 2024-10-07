@@ -3,6 +3,7 @@ export interface Ward {
     name: string;
     abbreviation: string;
     local_government_id: string;
+    units: [];
 }
 
 export interface ONDOLGA {

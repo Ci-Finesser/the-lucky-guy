@@ -34,7 +34,7 @@ export default function EligibilitySection() {
   return (
     <div className="w-full max-w-2xl mx-auto mt-16 flex flex-col justify-center items-center gap-10">
       <div className="h-28 flex flex-col justify-start items-center gap-2.5">
-        <div className="self-stretch text-center text-black text-2xl font-medium capitalize">
+        <div className="self-stretch text-center text-black text-2xl font-semibold capitalize">
           What do you need to join The Lucky Guy movement?
         </div>
         <div className="w-full text-center text-sm font-medium capitalize">

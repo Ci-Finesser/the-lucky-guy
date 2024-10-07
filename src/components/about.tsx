@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
+import MissionImage from "@/assets/mission.png"
 
 export default function AboutSectionImage() {
     return (
@@ -45,19 +46,15 @@ export default function AboutSectionImage() {
 
                     <div className="second">
                         <Card className="mb-4 max-w-md">
-                            <CardContent>
-                                <Image
-                                    src="/" // Replace with your image path
-                                    alt="About The Movement"
-                                    width={300} // Adjust width as needed
-                                    height={190} // Adjust height as needed
-                                    className="rounded-md" // Add optional styling
-                                />
-                            </CardContent>
-                        </Card>
-                        <Card className="max-w-md">
                             <CardHeader className="flex justify-between">
-                                <CardTitle className="font-bold">Our Vison</CardTitle>
+                                <Image
+                                    src={MissionImage} // Replace with your image path
+                                    alt="About The Movement"
+                                    width={600} // Adjust width as needed
+                                    height={600} // Adjust height as needed
+                                    className="rounded-md mb-6" // Add optional styling
+                                />
+                                <CardTitle className="font-bold mt-6">Our Vison</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p>

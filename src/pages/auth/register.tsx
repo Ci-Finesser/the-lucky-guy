@@ -1,14 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Textarea } from "@/components/ui/textarea"
-import { Progress } from "@/components/ui/progress"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { AlertCircle, CheckCircle2, Upload } from 'lucide-react'
+// import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+import { AlertCircle, CheckCircle2, Eye, EyeOff, Upload } from 'lucide-react'
 import { ONDOLGA, Ward } from '@/types'
 import Link from 'next/link'
+import { truncateString } from '@/lib/utils'
 
 interface RegistrationFormData {
     email: string
@@ -47,6 +45,8 @@ export default function RegistrationFlow() {
         selfie: null
     })
 
+    const [showPassword, setShowPassword] = useState(false);
+
     useEffect(() => {
         fetch('/api/ondoLga')
             .then(res => res.json())
@@ -76,11 +76,13 @@ export default function RegistrationFlow() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
-        // Here you would typically send the formData to your backend
         console.log('Form submitted:', formData)
-        // For demo purposes, we'll just move to the next step
         handleNext()
     }
+
+    const togglePasswordVisibility = () => {
+        setShowPassword(!showPassword);
+    };
 
     return (
         <div className="container">
@@ -118,7 +120,24 @@ export default function RegistrationFlow() {
                                         <Input placeholder="Email address" id="email" name="email" type="email" className="bg-neutral-100 h-[4rem] rounded-lg px-5 py-5 my-border-radius-input" required value={formData.email} onChange={handleInputChange} />
                                     </div>
                                     <div className="space-y-2">
-                                        <Input id="password" name="password" type="password" placeholder="Create a Password" required value={formData.password} onChange={handleInputChange} className="bg-neutral-100 h-[4rem] rounded-lg px-5 py-5 my-border-radius-input" />
+                                        <div className="relative space-y-2">
+                                            <Input
+                                                id="password"
+                                                name="password"
+                                                type={showPassword ? 'text' : 'password'}
+                                                placeholder="Create a Password"
+                                                required
+                                                value={formData.password}
+                                                onChange={handleInputChange}
+                                                className="bg-neutral-100 h-[4rem] rounded-lg px-5 py-5 my-border-radius-input"
+                                            />
+                                            <span
+                                                className="absolute right-4 top-1/3 transform -translate-y-1/2 cursor-pointer"
+                                                onClick={togglePasswordVisibility}
+                                            >
+                                                {showPassword ? <EyeOff size={20} color='#1B354F' /> : <Eye size={20}  color='#1B354F'/>}
+                                            </span>
+                                        </div>
                                     </div>
 
                                     <div className="flex items-center gap-2 mt-12">
@@ -136,6 +155,7 @@ export default function RegistrationFlow() {
                                     </div>
                                 </div>
                             )}
+
                             {step === 2 && (
                                 <div className="space-y-4">
                                     <Input
@@ -158,7 +178,7 @@ export default function RegistrationFlow() {
                                             {lgas &&
                                                 Object.keys(lgas).map((lgaKey) => (
                                                     <SelectItem key={lgas[Number(lgaKey)].id} value={lgas[Number(lgaKey)].name}>
-                                                        {lgas[Number(lgaKey)].name}
+                                                        {truncateString(lgas[Number(lgaKey)].name, 20)}
                                                     </SelectItem>
                                                 ))}
                                         </SelectContent>
@@ -177,7 +197,7 @@ export default function RegistrationFlow() {
                                                 {lgas && formData.lga
                                                     ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards || {}).map((ward: Ward) => (
                                                         <SelectItem key={ward?.id} value={ward?.name}>
-                                                            {ward.name}
+                                                            {truncateString(ward.name, 20)}
                                                         </SelectItem>
                                                     ))
                                                     : <SelectItem value="empty" disabled>Select a LGA first</SelectItem>}
@@ -185,7 +205,7 @@ export default function RegistrationFlow() {
                                         </Select>
 
                                         <Select
-                                            name="ward"
+                                            name="poll_unit"
                                             value={formData.poll_unit}
                                             onValueChange={(value) => setFormData((prev) => ({ ...prev, poll_unit: value }))}
                                         >
@@ -193,10 +213,10 @@ export default function RegistrationFlow() {
                                                 <SelectValue placeholder="Polling Unit" />
                                             </SelectTrigger>
                                             <SelectContent className='bg-white'>
-                                                {lgas && formData.lga
-                                                    ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards || {}).map((ward: Ward) => (
-                                                        <SelectItem key={ward?.id} value={ward?.name}>
-                                                            {ward.name}
+                                                {lgas && formData.ward
+                                                    ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards.find((ward) => ward.name === formData.ward)?.units || {}).map((units: any) => (
+                                                        <SelectItem key={units?.id} value={units?.name}>
+                                                            {truncateString(units.name, 25)}
                                                         </SelectItem>
                                                     ))
                                                     : <SelectItem value="empty" disabled>Select a Ward first</SelectItem>}
