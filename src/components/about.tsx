@@ -11,7 +11,7 @@ export default function AboutSectionImage() {
                     <div className="first">
                         <Card className="mb-4 max-w-md">
                             <CardHeader className="flex justify-between">
-                                <CardTitle className="font-bold">About The Movement</CardTitle>
+                                <CardTitle className="font-bold text-lg">About The Movement</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p>
@@ -22,7 +22,7 @@ export default function AboutSectionImage() {
 
                         <Card className="max-w-md">
                             <CardHeader className="flex justify-between">
-                                <CardTitle className="font-bold">Our Mission</CardTitle>
+                                <CardTitle className="font-bold text-lg">Our Mission</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <ul>
@@ -54,7 +54,7 @@ export default function AboutSectionImage() {
                                     height={600} // Adjust height as needed
                                     className="rounded-md mb-6" // Add optional styling
                                 />
-                                <CardTitle className="font-bold mt-6">Our Vison</CardTitle>
+                                <CardTitle className="font-bold mt-6 text-lg">Our Vison</CardTitle>
                             </CardHeader>
                             <CardContent>
                                 <p>
