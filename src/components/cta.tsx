@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import TlgHero from "./tlg-hero";
-import { ApcFlag, ArrowDown } from "./apc-flag";
+import { ApcFlag, ArrowDown, Tlg } from "./apc-flag";
 import { motion } from "framer-motion";
 import CtaImage from "@/assets/cta-image.png";
 import Image from "next/image";
@@ -13,13 +13,13 @@ export default function CtaSectionImage() {
                     <div>
                         <div className="mb-3 flex items-center">
                             <p className="mr-3">Take Action Today </p>
-                            <ApcFlag />
+                            <Tlg />
                         </div>
                         <h1 className="scroll-m-20 text-4xl font-extrabold tracking-tight lg:text-5xl mb-3">
                             Get Involved, Make An Impact
                         </h1>
                         <p className="mt-3 text-xl text-muted-foreground mb-3">
-                            Sign up to become a registered supporter and receive updates on upcoming events, resources, and opportunities to get involved Join our growing network of volunteers and organizers who are taking action in their communities to engage more youth in this movement.
+                            Sign up to become a registered member and receive updates on upcoming events, resources, and opportunities to get involved. Join our growing network of volunteers and organizers who are taking action in their communities to engage more youth in this movement.
                         </p>
                         {/* Buttons */}
                         <Button onClick={() => {

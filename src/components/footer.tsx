@@ -3,15 +3,15 @@ import Link from "next/link";
 export default function FooterSection() {
     return (
         <footer className="flex justify-between items-center px-4 mt-16">
-            <div className="text-[#474747] text-xs font-medium capitalize">
-                Copyright © 2024 The Lucky Guy - All Rights Reserved.
+            <div className="text-[#474747] text-md font-medium capitalize">
+                Copyright © 2024 The Lucky Guy Youth Movement - All Rights Reserved.
             </div>
             <div className="flex items-center gap-4">
-                <Link href="#" className="text-xs font-medium capitalize">
+                <Link href="#" className="text-md font-medium capitalize">
                     Terms of Service
                 </Link>
                 |
-                <Link href="#" className=" text-xs font-medium capitalize">
+                <Link href="#" className=" text-md font-medium capitalize">
                     Privacy Policy
                 </Link>
 
