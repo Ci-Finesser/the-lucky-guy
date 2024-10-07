@@ -69,6 +69,27 @@ export default function RegistrationFlow() {
         setFormData(prev => ({ ...prev, [name]: file }))
     }
 
+    const getPollUnits = () => {
+        let data: {
+            lga_id: string
+            state_id: string
+            ward_id: string
+        }
+
+        if (lgas.length > 0 && formData.lga && formData.ward) {
+            Object.values(lgas.find((lga) => lga.name === formData.lga) || {}).map((lga: ONDOLGA) => {
+                
+                data = {
+                    lga_id: lga.id,
+                    state_id: lga.state_id,
+                    ward_id: lga.wards.find((ward) => ward.name === formData.ward)?.id!
+                }
+
+                console.log('Data ::::: ', data)
+            })
+        }
+    }
+
     const handleNext = () => {
         if (step === 1) {
             const { email, password, terms, name } = formData
@@ -82,6 +103,10 @@ export default function RegistrationFlow() {
                 return
             }
         }
+
+        if (step === 2) {}
+        if (step === 3) {}
+        setErrorMsg(undefined)
         setStep(prev => Math.min(prev + 1, totalSteps))
     }
 
@@ -163,7 +188,7 @@ export default function RegistrationFlow() {
                                     </div>
 
                                     <div className="flex items-center gap-2 mt-12">
-                                        <input type="checkbox" id="terms" name='terms' value={formData.terms == true ? 'checked' : ''} className="rounded-sm border border-[#1b354f]" onChange={(e) => setFormData(prev => ({ ...prev, terms: e.target.checked }))} />
+                                        <input type="checkbox" id="terms" name='terms' checked={formData.terms} className="rounded-sm border border-[#1b354f]" onChange={(e) => setFormData(prev => ({ ...prev, terms: e.target.checked }))} />
                                         <label htmlFor="terms" className="text-[#110d0d] text-xs font-medium capitalize">
                                             I agree to the{' '}
                                             <Link href="#" className="text-[#1b354f]">

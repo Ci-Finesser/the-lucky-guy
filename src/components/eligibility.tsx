@@ -10,11 +10,6 @@ export default function EligibilitySection() {
 
   const criteria = [
     {
-      title: 'Between 18-45 years of age',
-      icon: <HourglassIcon color='white' />,
-      description: 'You must be within the eligible age range to participate in the movement.',
-    },
-    {
       title: 'Reside in Ondo State',
       icon: <HomeIcon color='white' />,
       description: 'Your residency in Ondo State is a requirement for joining the movement.',
@@ -23,11 +18,6 @@ export default function EligibilitySection() {
       title: 'Possess a valid voter’s card',
       icon: <IdCardIcon color='white' />,
       description: 'Ensure you have a valid voter’s card to exercise your voting rights.',
-    },
-    {
-      title: 'Eligible to vote',
-      icon: <VerifiedIcon color='white' />,
-      description: 'You must meet the legal requirements to be eligible to vote in elections.',
     },
   ];
 
