@@ -2,6 +2,71 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import Urbanist font */
+@font-face {
+  font-family: 'Urbanist';
+  src: url('/fonts/urbanist-reg.ttf') format('truetype'); /* Replace with your font file name */
+  font-weight: 400;
+}
+
+@font-face {
+  font-family: 'Urbanist';
+  src: url('/fonts/urbanist-reg.ttf') format('truetype'); /* Replace with your font file name */
+  font-weight: 700;
+
+  
+}
+
+body {
+  font-family: 'Urbanist', Arial, sans-serif;
+}
+
+.my-button {
+
+  background-color: #009fd5; /* Your desired background color */
+  color: white; /* Your desired text color */
+  border: none; /* Remove default button border */
+  font-size: 16px; /* Adjust font size as needed */
+  padding: 30px;
+  font-weight: bold; /* Adjust font weight as needed */
+  border-radius: 10px; /* Adjust border radius as needed */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.my-button:hover {
+  background-color: #007acc; /* Change background color on hover */
+  color: #009fd5;
+}
+
+.my-button-nbg {
+  background-color: transparent; /* Your desired background color */
+  border: none; /* Remove default button border */
+  font-size: 16px; /* Adjust font size as needed */
+  padding: 30px;
+  font-weight: bold; /* Adjust font weight as needed */
+  border-radius: 10px; /* Adjust border radius as needed */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.my-button-nbg:hover {
+  color: #009fd5;
+}
+
+.subscribe-button {
+  background-color: #009fd5; /* Your desired background color */
+  color: white; /* Your desired text color */
+  border: none; /* Remove default button border */
+  padding: 10px 20px; /* Adjust padding as needed */
+  font-size: 16px; /* Adjust font size as needed */
+  font-weight: bold; /* Adjust font weight as needed */
+  border-radius: 10px; /* Adjust border radius as needed */
+  cursor: pointer; /* Change cursor to pointer on hover */
+}
+
+.subscribe-button:hover {
+  background-color: #007acc; /* Change background color on hover */
+}
+
 
 .centered-element {
   position: absolute;
