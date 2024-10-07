@@ -22,7 +22,9 @@ export default function CtaSectionImage() {
                             Sign up to become a registered supporter and receive updates on upcoming events, resources, and opportunities to get involved Join our growing network of volunteers and organizers who are taking action in their communities to engage more youth in this movement.
                         </p>
                         {/* Buttons */}
-                        <Button className="my-button">join the movement</Button>
+                        <Button onClick={() => {
+                            window.open("/auth/register", "_blank");
+                        }} className="my-button">Join The Movement</Button>
                     </div>
                     <div className="relative ms-4 md:justify-self-end">
                         <Image
