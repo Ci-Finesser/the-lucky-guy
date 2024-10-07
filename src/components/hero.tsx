@@ -33,7 +33,9 @@ export default function HeroSectionImage() {
                         <TlgHero />
                     </div>
                 </div>
-                <div className="flex justify-center mt-12">
+                <div className="flex justify-center mt-12" onClick={()=> {
+                    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+                }}>
                     <motion.div
                         animate={{ y: ["0px", "10px", "0px"] }} // Bouncing animation
                         transition={{ duration: 1, repeat: Infinity, ease: "easeInOut" }}
