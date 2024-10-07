@@ -15,7 +15,7 @@ export default function AboutSectionImage() {
                             </CardHeader>
                             <CardContent>
                                 <p>
-                                    Our vision is to give young people the platform they deserve in shaping the political landscape, this campaign is more than just an election - it’s a movement for the future. by mobilizing the youth, we aim to create a government that listens, represents, and empowers the next generation
+                                    Our vision is to give young people the platform they deserve in shaping the political landscape, this campaign is more than just an election - it’s a movement for the future. By mobilizing the youth, we aim to create a government that listens, represents, and empowers the next generation
                                 </p>
                             </CardContent>
                         </Card>
@@ -52,7 +52,7 @@ export default function AboutSectionImage() {
                                     alt="About The Movement"
                                     width={600} // Adjust width as needed
                                     height={600} // Adjust height as needed
-                                    className="rounded-md mb-6" // Add optional styling
+                                    className="rounded-md mb-8" // Add optional styling
                                 />
                                 <CardTitle className="font-bold mt-6 text-lg">Our Vison</CardTitle>
                             </CardHeader>
