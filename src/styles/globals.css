@@ -95,6 +95,12 @@ body {
   border-width: 2px;
   border-radius: 10px; /* Adjust border radius as needed */
 }
+.my-border-radius-input-error {
+  border-color: #ff0000;
+  border-width: 2px;
+  border-radius: 10px; /* Adjust border radius as needed */
+}
+
 .my-auth-button:hover {
   background-color: #1B354F; /* Change background color on hover */
   color: #1B354F;

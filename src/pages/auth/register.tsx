@@ -12,6 +12,7 @@ interface RegistrationFormData {
     email: string
     phone: string
     password: string
+    terms: boolean
     name: string
     occupation: string
     lga: string
@@ -28,10 +29,12 @@ interface RegistrationFormData {
 export default function RegistrationFlow() {
     const [step, setStep] = useState(1)
     const [lgas, setLgas] = useState<ONDOLGA[]>([])
+    const [errorMsg, setErrorMsg] = useState<string>()
     const [formData, setFormData] = useState<RegistrationFormData>({
         email: '',
         phone: '',
         password: '',
+        terms: false,
         name: '',
         occupation: '',
         lga: '',
@@ -67,6 +70,18 @@ export default function RegistrationFlow() {
     }
 
     const handleNext = () => {
+        if (step === 1) {
+            const { email, password, terms, name } = formData
+            if (!email || !password || !name) {
+                setErrorMsg('All fields are required!')
+                return
+            }
+
+            if (!terms) {
+                setErrorMsg('Please agree to the terms and conditions')
+                return
+            }
+        }
         setStep(prev => Math.min(prev + 1, totalSteps))
     }
 
@@ -83,6 +98,8 @@ export default function RegistrationFlow() {
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+
+    console.log('Checked ::::: ', formData.terms)
 
     return (
         <div className="container">
@@ -110,6 +127,11 @@ export default function RegistrationFlow() {
                         </div>
                     </div>
                     <div className='mt-12 w-full max-w-lg'>
+                        {errorMsg && (
+                            <div className="m-4 text-[#ff0000] text-sm font-semibold capitalize">
+                                {errorMsg}
+                            </div>
+                        )}
                         <form onSubmit={handleSubmit}>
                             {step === 1 && (
                                 <div className="space-y-4">
@@ -135,13 +157,13 @@ export default function RegistrationFlow() {
                                                 className="absolute right-4 top-1/3 transform -translate-y-1/2 cursor-pointer"
                                                 onClick={togglePasswordVisibility}
                                             >
-                                                {showPassword ? <EyeOff size={20} color='#1B354F' /> : <Eye size={20}  color='#1B354F'/>}
+                                                {showPassword ? <EyeOff size={20} color='#1B354F' /> : <Eye size={20} color='#1B354F' />}
                                             </span>
                                         </div>
                                     </div>
 
                                     <div className="flex items-center gap-2 mt-12">
-                                        <input type="checkbox" id="terms" className="rounded-sm border border-[#1b354f]" />
+                                        <input type="checkbox" id="terms" name='terms' value={formData.terms == true ? 'checked' : ''} className="rounded-sm border border-[#1b354f]" onChange={(e) => setFormData(prev => ({ ...prev, terms: e.target.checked }))} />
                                         <label htmlFor="terms" className="text-[#110d0d] text-xs font-medium capitalize">
                                             I agree to the{' '}
                                             <Link href="#" className="text-[#1b354f]">
@@ -164,6 +186,7 @@ export default function RegistrationFlow() {
                                         className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
                                         value={formData.occupation}
                                         onChange={handleInputChange}
+                                        required
                                     />
 
                                     <Select
@@ -320,7 +343,6 @@ export default function RegistrationFlow() {
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>
