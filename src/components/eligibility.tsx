@@ -11,12 +11,12 @@ export default function EligibilitySection() {
   const criteria = [
     {
       title: 'Reside in Ondo State',
-      icon: <HomeIcon color='white' />,
+      icon: <HomeIcon color='white' size={20}/>,
       description: 'Your residency in Ondo State is a requirement for joining the movement.',
     },
     {
       title: 'Possess a valid voter’s card',
-      icon: <IdCardIcon color='white' />,
+      icon: <IdCardIcon color='white' size={20} />,
       description: 'Ensure you have a valid voter’s card to exercise your voting rights.',
     },
   ];
@@ -31,7 +31,7 @@ export default function EligibilitySection() {
           Explore the eligibility criteria for joining The Lucky Guy movement.
         </div>
       </div>
-      <div className="p-10 bg-[#f8f7f7] rounded-md w-full flex justify-center items-center">
+      <div className="p-10 bg-[#f8f7f7] my-border-radius w-full flex justify-center items-center">
         <div className="flex flex-col justify-start items-center gap-10 w-full">
           <div className="self-stretch text-center text-base font-semibold capitalize">
             To be eligible to join TLG, users must;
@@ -40,15 +40,15 @@ export default function EligibilitySection() {
             {criteria.map((criterion, index) => (
               <div
                 key={index}
-                className="bg-white rounded-md p-5 flex flex-col justify-center items-start gap-2.5"
+                className="bg-white my-border-radius p-5 flex flex-col justify-center items-start gap-2.5"
               >
                 <div className="p-[5px] bg-[#1277dd] rounded flex justify-start items-center gap-2.5">
                   {criterion.icon}
                 </div>
-                <div className="text-[#1a1a1a] text-sm font-medium capitalize">
+                <div className="text-[#1a1a1a] text-md font-semibold capitalize">
                   {criterion.title}
                   {isExpanded && (
-                    <p className="mt-2 text-xs text-gray-600">{criterion.description}</p>
+                    <p className="mt-2 text-sm text-gray-600">{criterion.description}</p>
                   )}
                 </div>
               </div>
