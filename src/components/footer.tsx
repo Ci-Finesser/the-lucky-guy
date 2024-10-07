@@ -10,14 +10,16 @@ export default function FooterSection() {
                 <Link href="#" className="text-xs font-medium capitalize">
                     Terms of Service
                 </Link>
+                |
                 <Link href="#" className=" text-xs font-medium capitalize">
                     Privacy Policy
                 </Link>
-                <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 rounded-full bg-black" />
-                    <div className="w-4 h-4 rounded-full bg-black" />
-                    <div className="w-4 h-4 rounded-full bg-black" />
-                </div>
+
+            </div>
+            <div className="flex items-center gap-2">
+                <div className="w-4 h-4 rounded-full bg-black" />
+                <div className="w-4 h-4 rounded-full bg-black" />
+                <div className="w-4 h-4 rounded-full bg-black" />
             </div>
         </footer>
     );
