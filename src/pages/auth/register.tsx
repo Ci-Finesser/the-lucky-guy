@@ -69,25 +69,24 @@ export default function RegistrationFlow() {
         setFormData(prev => ({ ...prev, [name]: file }))
     }
 
-    const getPollUnits = () => {
-        let data: {
-            lga_id: string
-            state_id: string
-            ward_id: string
-        }
+    const getPollUnits = async (ward_name?: string) => {
+        let data = {}
 
-        if (lgas.length > 0 && formData.lga && formData.ward) {
-            Object.values(lgas.find((lga) => lga.name === formData.lga) || {}).map((lga: ONDOLGA) => {
-                
-                data = {
-                    lga_id: lga.id,
-                    state_id: lga.state_id,
-                    ward_id: lga.wards.find((ward) => ward.name === formData.ward)?.id!
-                }
-
-                console.log('Data ::::: ', data)
-            })
-        }
+        lgas.map((lga) => {
+            if (lga.name === formData.lga) {
+                lga.wards.map((ward: Ward) => {
+                    if (ward.name === ward_name) {
+                        data = {
+                            lga_id: lga.id,
+                            state_id: lga.state_id,
+                            ward_id: ward.id
+                        }
+                        console.log('Data ::::: ', JSON.stringify(data))
+                        fetch(`/api/fetchPollUnits?lga_id=${lga.id}&state_id=${lga.state_id}&ward_id=${ward.id}`).then((response: Response) => response).then((resData) => console.log('ResData ::::: ', JSON.stringify(resData)))
+                    }
+                })
+            }
+        })
     }
 
     const handleNext = () => {
@@ -104,8 +103,8 @@ export default function RegistrationFlow() {
             }
         }
 
-        if (step === 2) {}
-        if (step === 3) {}
+        if (step === 2) { }
+        if (step === 3) { }
         setErrorMsg(undefined)
         setStep(prev => Math.min(prev + 1, totalSteps))
     }
@@ -123,8 +122,6 @@ export default function RegistrationFlow() {
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
-
-    console.log('Checked ::::: ', formData.terms)
 
     return (
         <div className="container">
@@ -226,7 +223,7 @@ export default function RegistrationFlow() {
                                             {lgas &&
                                                 Object.keys(lgas).map((lgaKey) => (
                                                     <SelectItem key={lgas[Number(lgaKey)].id} value={lgas[Number(lgaKey)].name}>
-                                                        {truncateString(lgas[Number(lgaKey)].name, 20)}
+                                                        {truncateString(lgas[Number(lgaKey)].name, 20) ?? 'Select Local Government'}
                                                     </SelectItem>
                                                 ))}
                                         </SelectContent>
@@ -245,13 +242,12 @@ export default function RegistrationFlow() {
                                                 {lgas && formData.lga
                                                     ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards || {}).map((ward: Ward) => (
                                                         <SelectItem key={ward?.id} value={ward?.name}>
-                                                            {truncateString(ward.name, 20)}
+                                                            {truncateString(ward.name, 20) || 'Select Ward'}
                                                         </SelectItem>
                                                     ))
                                                     : <SelectItem value="empty" disabled>Select a LGA first</SelectItem>}
                                             </SelectContent>
                                         </Select>
-
                                         <Select
                                             name="poll_unit"
                                             value={formData.poll_unit}
@@ -261,18 +257,27 @@ export default function RegistrationFlow() {
                                                 <SelectValue placeholder="Polling Unit" />
                                             </SelectTrigger>
                                             <SelectContent className='bg-white'>
-                                                {lgas && formData.ward
+                                                {/* {lgas && formData.ward
                                                     ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards.find((ward) => ward.name === formData.ward)?.units || {}).map((units: any) => (
                                                         <SelectItem key={units?.id} value={units?.name}>
                                                             {truncateString(units.name, 25)}
                                                         </SelectItem>
                                                     ))
-                                                    : <SelectItem value="empty" disabled>Select a Ward first</SelectItem>}
+                                                    : <SelectItem value="empty" disabled>Select a Ward first</SelectItem>} */}
                                             </SelectContent>
                                         </Select>
                                     </div>
 
-                                    <Select
+                                    <Input
+                                        placeholder="Enter Bank Name"
+                                        className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
+                                        value={formData.bank}
+                                        type='text'
+                                        name='bank'
+                                        onChange={handleInputChange}
+                                    />
+
+                                    {/* <Select
                                         name="bank"
                                         value={formData.bank}
                                         onValueChange={(value) => setFormData((prev) => ({ ...prev, bank: value }))}
@@ -281,11 +286,10 @@ export default function RegistrationFlow() {
                                             <SelectValue placeholder="Select Bank" />
                                         </SelectTrigger>
                                         <SelectContent className='bg-white'>
-                                            {/* Add your bank options here */}
                                             <SelectItem value="bank1">Bank 1</SelectItem>
                                             <SelectItem value="bank2">Bank 2</SelectItem>
                                         </SelectContent>
-                                    </Select>
+                                    </Select> */}
 
                                     <Input
                                         placeholder="Enter Account Number"
