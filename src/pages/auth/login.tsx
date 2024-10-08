@@ -5,9 +5,27 @@ import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 // import { Icons } from "@/components/ui/icons"
 import { PiSpinner } from 'react-icons/pi'
+import { motion } from 'framer-motion'
+import Link from 'next/link'
+import { EyeOff, Eye } from 'lucide-react'
+import { AppleIcon, GoogleIcon, Tlg, TlgIcon } from '@/components/apc-flag'
+
+interface SignInFormData {
+  email: string
+  password: string
+}
+
 
 export default function SignIn() {
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [errorMsg, setErrorMsg] = useState<string>()
+  const [formData, setFormData] = useState<SignInFormData>({
+    email: '',
+    password: ''
+  });
+
+  const [showPassword, setShowPassword] = useState(false);
+
 
   async function onSubmit(event: React.SyntheticEvent) {
     event.preventDefault()
@@ -18,65 +36,113 @@ export default function SignIn() {
     }, 3000)
   }
 
+  const handleInputChange = (e: any) => {
+    const { name, value } = e.target
+    setFormData(prev => ({ ...prev, [name]: value }))
+  }
+
+  const handleSubmit = (e: any) => {
+    e.preventDefault()
+    console.log('Form submitted:', formData)
+  }
+
+  const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <div className="container mx-auto flex items-center justify-center min-h-screen px-4 py-12">
-      <Card className="w-full max-w-md">
-        <CardHeader className="space-y-1">
-          <CardTitle className="text-2xl font-bold text-center">Sign in</CardTitle>
-          <CardDescription className="text-center">
-            Enter your email and password to access your account
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="grid gap-4">
-          <form onSubmit={onSubmit}>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="m@example.com" required />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input id="password" type="password" required />
-            </div>
-            <Button className="w-full mt-4" type="submit" disabled={isLoading}>
-              {isLoading && (
-                <PiSpinner className="mr-2 h-4 w-4 animate-spin" />
-              )}
-              Sign in
-            </Button>
-          </form>
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <span className="w-full border-t" />
-            </div>
-            <div className="relative flex justify-center text-xs uppercase">
-              <span className="bg-background px-2 text-muted-foreground">
-                Or continue with
-              </span>
+    <div className="container">
+      <header className='w-full h-20 flex items-center justify-between px-8'>
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          className="flex items-center"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="rounded-full shadow">
+              <Tlg />
             </div>
           </div>
-          <div className="grid grid-cols-2 gap-6">
-            <Button variant="outline">
-              x
-            </Button>
-            <Button variant="outline">
-              x
-            </Button>
+        </motion.div>
+        <Link href="/auth/register" className="my-button-nbg">
+          Sign Up
+        </Link>
+      </header>
+      <div className="w-full max-w-lg mx-auto mt-16 flex flex-col justify-center items-center gap-10 relative bg-white">
+        <div>
+          <div className="text-center">
+            <div className="text-[#242424] text-3xl font-semibold capitalize mb-4">
+              Welcome Back
+            </div>
+            <div className="text-neutral-500 text-sm font-medium capitalize">
+              Create your account to get involved and join the movement
+            </div>
           </div>
-        </CardContent>
-        <CardFooter className="flex flex-col items-center">
-          <p className="mt-2 text-xs text-center text-muted-foreground">
-            <a className="underline underline-offset-4 hover:text-primary" href="#">
-              Forgot password?
-            </a>
-          </p>
-          <p className="mt-2 text-xs text-center text-muted-foreground">
-            Don't have an account?{" "}
-            <a className="underline underline-offset-4 hover:text-primary" href="#">
-              Sign up
-            </a>
-          </p>
-        </CardFooter>
-      </Card>
+
+          <div className='mt-12 w-full max-w-lg'>
+            {errorMsg && (
+              <div className="m-4 text-[#ff0000] text-sm font-semibold capitalize">
+                {errorMsg}
+              </div>
+
+
+            )}
+
+            <form onSubmit={handleSubmit}>
+              <div className="space-y-4">
+                <div className="space-y-2">
+                  <Input placeholder="Email address" id="email" name="email" type="email" className="bg-neutral-100 h-[4rem] rounded-lg px-5 py-5 my-border-radius-input-login" required value={formData.email} onChange={handleInputChange} />
+                </div>
+
+                <div className="space-y-2">
+                  <div className="relative space-y-2">
+                    <Input
+                      id="password"
+                      name="password"
+                      type={showPassword ? 'text' : 'password'}
+                      placeholder="Password"
+                      required
+                      value={formData.password}
+                      onChange={handleInputChange}
+                      className="bg-neutral-100 h-[4rem] rounded-lg px-5 py-5 my-border-radius-input-login"
+                    />
+                    <span
+                      className="absolute right-4 top-1/3 transform -translate-y-1/2 cursor-pointer"
+                      onClick={togglePasswordVisibility}
+                    >
+                      {showPassword ? <EyeOff size={20} color='#1B354F' /> : <Eye size={20} color='#1B354F' />}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Link href={''} className='capitalize underline font-semibold'>
+                    Forgot Password ?
+                  </Link>
+                </div>
+              </div>
+
+              <Button type="submit" onClick={handleSubmit} className="my-auth-button w-full mt-9">
+                Sign In
+              </Button>
+              <div className='text-center font-bold my-5'>
+                Or
+              </div>
+              <div className="socials flex flex-col items-center justify-center">
+                <p className='mb-5 font-semibold text-lg'>Continue using your socials</p>
+                <div className="flex items-center gap-3">
+                  <div className="p-4 bg-neutral-100 border-radius shadow border flex-col justify-center items-center gap-2.5 inline-flex">
+                    <GoogleIcon />
+                  </div>
+                  <div className="p-4 bg-neutral-100 border-radius  shadow border flex-col justify-center items-center gap-2.5 inline-flex">
+                    <AppleIcon />
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
     </div>
   )
 }

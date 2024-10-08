@@ -7,6 +7,8 @@ import { AlertCircle, CheckCircle2, Eye, EyeOff, Upload } from 'lucide-react'
 import { ONDOLGA, Ward } from '@/types'
 import Link from 'next/link'
 import { truncateString } from '@/lib/utils'
+import { motion } from 'framer-motion'
+import { Tlg } from '@/components/apc-flag'
 
 interface RegistrationFormData {
     email: string
@@ -85,7 +87,9 @@ export default function RegistrationFlow() {
             }
         }
 
-        if (step === 2) { }
+        if (step === 2) {
+
+        }
         if (step === 3) { }
         setErrorMsg(undefined)
         setStep(prev => Math.min(prev + 1, totalSteps))
@@ -107,6 +111,22 @@ export default function RegistrationFlow() {
 
     return (
         <div className="container">
+            <header className='w-full h-20 flex items-center justify-between px-8'>
+                <motion.div
+                    initial="hidden"
+                    animate="visible"
+                    className="flex items-center"
+                >
+                    <div className="flex items-center space-x-4">
+                        <div className="rounded-full shadow">
+                            <Tlg />
+                        </div>
+                    </div>
+                </motion.div>
+                <Link href="/auth/login" className="my-button-nbg">
+                    Sign In
+                </Link>
+            </header>
             <div className="w-full max-w-lg mx-auto mt-16 flex flex-col justify-center items-center gap-10 relative bg-white">
                 <div>
                     <div className="text-center">
@@ -114,7 +134,7 @@ export default function RegistrationFlow() {
                             Join the movement
                         </div>
                         <div className="text-neutral-500 text-sm font-medium capitalize">
-                            Create your account to get involved and join the movement
+                            sign in to your account to get involved and join the movement
                         </div>
                     </div>
                     <div className="mt-8 max-w-lg w-full">

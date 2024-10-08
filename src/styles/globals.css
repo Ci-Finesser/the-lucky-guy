@@ -38,19 +38,23 @@ body {
   border-radius: 50px 50px 50px 50px; /* Adjust border radius as needed */
 }
 
+.border-radius {
+  border-radius: 10%; /* Make button a circle */
+}
+
 .my-button:hover {
   background-color: #007acc; /* Change background color on hover */
   color: #009fd5;
 }
 
 .my-button-nbg {
-  background-color: transparent; /* Your desired background color */
-  border: none; /* Remove default button border */
-  font-size: 16px; /* Adjust font size as needed */
+  background-color: transparent;
+  border: none; 
+  font-size: 18px; 
   padding: 30px;
-  font-weight: bold; /* Adjust font weight as needed */
-  border-radius: 10px; /* Adjust border radius as needed */
-  cursor: pointer; /* Change cursor to pointer on hover */
+  font-weight: bold;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 .my-button-nbg:hover {
@@ -92,6 +96,12 @@ body {
 
 .my-border-radius-input {
   border-color: #afadad;
+  border-width: 2px;
+  border-radius: 10px; /* Adjust border radius as needed */
+}
+
+.my-border-radius-input-login {
+  border-color: transparent;
   border-width: 2px;
   border-radius: 10px; /* Adjust border radius as needed */
 }
