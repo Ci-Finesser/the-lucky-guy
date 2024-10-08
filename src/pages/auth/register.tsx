@@ -101,13 +101,22 @@ export default function RegistrationFlow() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
-        console.log('Form submitted:', formData)
+        // Handle form submission here (e.g., send data to an API)
+        fetch('/api/submitRegistrationData', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(formData)
+        }).then(response => response.json()).then(data => {
+            console.log('Form submitted:', JSON.stringify(data));
+        })
         handleNext()
     }
 
     const togglePasswordVisibility = () => {
         setShowPassword(!showPassword);
     };
+
+    const jj = truncateString(formData.poll_unit, 20)
 
     return (
         <div className="container">
@@ -156,7 +165,7 @@ export default function RegistrationFlow() {
                                 {errorMsg}
                             </div>
                         )}
-                        <form onSubmit={handleSubmit}>
+                        <form onSubmit={handleSubmit} className='max-w-md'>
                             {step === 1 && (
                                 <div className="space-y-4">
                                     <div className="space-y-2">

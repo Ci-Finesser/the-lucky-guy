@@ -43,7 +43,18 @@ export default function SignIn() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
-    console.log('Form submitted:', formData)
+    fetch('/api/submitLoginData', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(formData)
+    }).then((response) => response.json()).then(data => {
+      
+      if (!data.status) {
+        setErrorMsg(data.message);
+      } else {
+        console.log('Form submitted:', JSON.stringify(data));
+      }
+    })
   }
 
   const togglePasswordVisibility = () => {
