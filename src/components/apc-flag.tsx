@@ -16,15 +16,15 @@ export const ApcFlag = () => (
 export const Tlg = () => (
     <svg width="30" height="31" viewBox="0 0 30 31" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g filter="url(#filter0_d_198_479)">
-            <rect x="1" width="28" height="28" rx="14" fill="white" shape-rendering="crispEdges" />
-            <rect x="1.5" y="0.5" width="27" height="27" rx="13.5" stroke="#BEEAF9" stroke-opacity="0.97" shape-rendering="crispEdges" />
+            <rect x="1" width="28" height="28" rx="14" fill="white" shapeRendering="crispEdges" />
+            <rect x="1.5" y="0.5" width="27" height="27" rx="13.5" stroke="#BEEAF9" strokeOpacity="0.97" shapeRendering="crispEdges" />
             <path d="M10.9845 9.8V10.944H8.5315V17.5H7.3875V10.944H4.94V9.8H10.9845Z" fill="#E62B34" />
             <path d="M12.0887 17.5V9.8H13.2327V16.356H16.5492V17.5H12.0887Z" fill="#5DC4E7" />
             <path d="M20.7285 17.643C20.1932 17.643 19.6945 17.5403 19.2325 17.335C18.7742 17.126 18.3727 16.8382 18.028 16.4715C17.687 16.1012 17.4194 15.674 17.225 15.19C17.0344 14.706 16.939 14.1908 16.939 13.6445C16.939 13.0688 17.0417 12.539 17.247 12.055C17.4524 11.571 17.7329 11.1512 18.0885 10.7955C18.4442 10.4362 18.8494 10.1575 19.304 9.9595C19.7624 9.7615 20.2427 9.6625 20.745 9.6625C21.3134 9.6625 21.8597 9.7945 22.384 10.0585C22.9084 10.3225 23.3649 10.7185 23.7535 11.2465L22.7305 11.802C22.4665 11.472 22.1585 11.2227 21.8065 11.054C21.4582 10.8853 21.1007 10.801 20.734 10.801C20.3784 10.801 20.041 10.8743 19.722 11.021C19.403 11.164 19.1207 11.3657 18.875 11.626C18.6294 11.8827 18.435 12.1852 18.292 12.5335C18.1527 12.8782 18.083 13.254 18.083 13.661C18.083 14.0533 18.1509 14.4218 18.2865 14.7665C18.4259 15.1112 18.6165 15.4137 18.8585 15.674C19.1042 15.9307 19.3865 16.1323 19.7055 16.279C20.0282 16.4257 20.3729 16.499 20.7395 16.499C21.0109 16.499 21.2712 16.455 21.5205 16.367C21.7699 16.279 22.0009 16.1543 22.2135 15.993C22.4299 15.828 22.6187 15.6318 22.78 15.4045C22.9414 15.1772 23.0697 14.9242 23.165 14.6455H21.5315V13.6335H24.507C24.5144 14.1835 24.419 14.7005 24.221 15.1845C24.0267 15.6685 23.7554 16.0957 23.407 16.466C23.0624 16.8327 22.6609 17.1205 22.2025 17.3295C21.7442 17.5385 21.2529 17.643 20.7285 17.643Z" fill="#3AA555" />
         </g>
         <defs>
-            <filter id="filter0_d_198_479" x="0" y="0" width="30" height="31" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <filter id="filter0_d_198_479" x="0" y="0" width="30" height="31" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
                 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
                 <feOffset dy="2" />
                 <feGaussianBlur stdDeviation="0.5" />
@@ -41,8 +41,8 @@ export const Tlg = () => (
 export const ArrowDown = () => (
     <svg width="65" height="65" viewBox="0 0 65 65" fill="none" xmlns="http://www.w3.org/2000/svg">
         <circle cx="32.5" cy="32.5" r="27.5" fill="#2C4156" />
-        <circle cx="32.5" cy="32.5" r="32" stroke="#2C4156" stroke-dasharray="2 2" />
-        <path d="M32 41V25M32 41L25 34M32 41L39 34" stroke="white" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+        <circle cx="32.5" cy="32.5" r="32" stroke="#2C4156" strokeDasharray="2 2" />
+        <path d="M32 41V25M32 41L25 34M32 41L39 34" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
     </svg>
 );
 

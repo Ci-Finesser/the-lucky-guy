@@ -4,14 +4,14 @@ import React from 'react';
 const TlgHero = () => (
   <svg width="383" height="465" viewBox="0 0 383 465" fill="none" xmlns="http://www.w3.org/2000/svg" xmlnsXlink="http://www.w3.org/1999/xlink">
     <g filter="url(#filter0_d_125_293)">
-      <path d="M337.499 1.46283L378.408 5.62841V444.403L334.831 456.437L337.499 1.46283Z" fill="#1B354F" fill-opacity="0.77" />
+      <path d="M337.499 1.46283L378.408 5.62841V444.403L334.831 456.437L337.499 1.46283Z" fill="#1B354F" fillOpacity="0.77" />
       <g filter="url(#filter1_d_125_293)">
-        <rect x="4" y="1" width="333.499" height="455.437" fill="url(#pattern0_125_293)" shape-rendering="crispEdges" />
+        <rect x="4" y="1" width="333.499" height="455.437" fill="url(#pattern0_125_293)" shapeRendering="crispEdges" />
       </g>
     </g>
     <defs>
-      <filter id="filter0_d_125_293" x="0" y="0" width="382.408" height="463.437" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <filter id="filter0_d_125_293" x="0" y="0" width="382.408" height="463.437" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
         <feOffset dy="3" />
         <feGaussianBlur stdDeviation="2" />
@@ -20,8 +20,8 @@ const TlgHero = () => (
         <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_125_293" />
         <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_125_293" result="shape" />
       </filter>
-      <filter id="filter1_d_125_293" x="0" y="1" width="341.499" height="463.437" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-        <feFlood flood-opacity="0" result="BackgroundImageFix" />
+      <filter id="filter1_d_125_293" x="0" y="1" width="341.499" height="463.437" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+        <feFlood floodOpacity="0" result="BackgroundImageFix" />
         <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 127 0" result="hardAlpha" />
         <feOffset dy="4" />
         <feGaussianBlur stdDeviation="2" />

@@ -23,6 +23,7 @@ interface RegistrationFormData {
     passportPhoto: File | null
     votersdiv: File | null
     nin: string
+    vcn: string
     selfie: File | null
 }
 
@@ -45,6 +46,7 @@ export default function RegistrationFlow() {
         passportPhoto: null,
         votersdiv: null,
         nin: '',
+        vcn: '',
         selfie: null
     })
 
@@ -67,26 +69,6 @@ export default function RegistrationFlow() {
     const handleFileUpload = (name: any) => (e: any) => {
         const file = e.target.files[0]
         setFormData(prev => ({ ...prev, [name]: file }))
-    }
-
-    const getPollUnits = async (ward_name?: string) => {
-        let data = {}
-
-        lgas.map((lga) => {
-            if (lga.name === formData.lga) {
-                lga.wards.map((ward: Ward) => {
-                    if (ward.name === ward_name) {
-                        data = {
-                            lga_id: lga.id,
-                            state_id: lga.state_id,
-                            ward_id: ward.id
-                        }
-                        console.log('Data ::::: ', JSON.stringify(data))
-                        fetch(`/api/fetchPollUnits?lga_id=${lga.id}&state_id=${lga.state_id}&ward_id=${ward.id}`).then((response: Response) => response).then((resData) => console.log('ResData ::::: ', JSON.stringify(resData)))
-                    }
-                })
-            }
-        })
     }
 
     const handleNext = () => {
@@ -135,7 +117,7 @@ export default function RegistrationFlow() {
                             Create your account to get involved and join the movement
                         </div>
                     </div>
-                    <div className="mt-8 max-w-md w-full">
+                    <div className="mt-8 max-w-lg w-full">
                         <div className="w-full h-1.5 bg-[#1b354f]/20 relative my-border-radius">
                             <div className="h-full bg-[#1b354f] my-border-radius" style={{ width: `${progress}%` }} />
                         </div>
@@ -277,19 +259,6 @@ export default function RegistrationFlow() {
                                         onChange={handleInputChange}
                                     />
 
-                                    {/* <Select
-                                        name="bank"
-                                        value={formData.bank}
-                                        onValueChange={(value) => setFormData((prev) => ({ ...prev, bank: value }))}
-                                    >
-                                        <SelectTrigger className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input w-full">
-                                            <SelectValue placeholder="Select Bank" />
-                                        </SelectTrigger>
-                                        <SelectContent className='bg-white'>
-                                            <SelectItem value="bank1">Bank 1</SelectItem>
-                                            <SelectItem value="bank2">Bank 2</SelectItem>
-                                        </SelectContent>
-                                    </Select> */}
 
                                     <Input
                                         placeholder="Enter Account Number"
@@ -311,6 +280,17 @@ export default function RegistrationFlow() {
                                         className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
                                         value={formData.nin}
                                         onChange={handleInputChange}
+                                        required
+                                    />
+
+                                    <Input
+                                        placeholder="Voter's Card Number"
+                                        name='vcn'
+                                        type='number'
+                                        className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
+                                        value={formData.vcn}
+                                        onChange={handleInputChange}
+                                        required
                                     />
                                     <div className="flex items-center justify-center w-full">
                                         <label htmlFor="selfie" className="w-full h-64 my-border-radius-input border-dashed cursor-pointer bg-gray-50 hover:bg-gray-100">
