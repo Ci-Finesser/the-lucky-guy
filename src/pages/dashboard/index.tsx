@@ -8,25 +8,118 @@ import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
 import { Bell, CreditCard, FileText, Users, Wallet } from 'lucide-react'
+import { motion, AnimatePresence } from 'framer-motion'
 
-export default function Dashboard({ user = { role: 'admin', name: 'John Doe', verificationStatus: 'pending', walletBalance: 0 } }) {
-  const [activeTab, setActiveTab] = useState('overview')
+const dashboardHeaderVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
+};
+
+const tabVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.1 } },
+};
+
+const tabContentVariants = {
+  hidden: { opacity: 0, y: 10 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.3, delay: 0.2 } },
+};
+
+const tabUnderlineVariants = {
+  hidden: { width: 0 },
+  visible: { width: '100%', transition: { duration: 0.3 } },
+};
+
+const userNavItems = [
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Wallet', href: '/dashboard/wallet' },
+  { label: 'Events', href: '/dashboard/events' },
+  { label: 'Community', href: '/dashboard/community' },
+];
+
+const adminNavItems = [
+  { label: 'Dashboard', href: '/dashboard' },
+  { label: 'Members', href: '/dashboard/members' },
+  { label: 'Funds', href: '/dashboard/funds' },
+  { label: 'Messaging', href: '/dashboard/messaging' },
+];
+
+export default function Dashboard({ user = { role: 'user', name: 'John Doe', verificationStatus: 'pending', walletBalance: 0 } }) {
+  const [activeTab, setActiveTab] = useState(0);
   const isAdmin = user.role === 'admin'
 
+  const handleTabClick = (index: number) => {
+    setActiveTab(index);
+  };
+
+  const navItems = isAdmin ? adminNavItems : userNavItems;
+
   return (
-    <div className="container mx-auto p-4">
-      <header className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">Lucky Guy Youth Movement</h1>
-        <div className="flex items-center space-x-4">
-          <Bell className="h-6 w-6 text-gray-500" />
-          <Avatar>
-            <AvatarImage src="/placeholder.svg?height=40&width=40" alt={user.name} />
-            <AvatarFallback>{user.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
-          </Avatar>
-        </div>
+    <div className="container mx-auto">
+      <header className="w-full h-20 bg-white shadow flex items-center justify-between px-4">
+        <motion.div
+          variants={dashboardHeaderVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex items-center"
+        >
+          <div className="flex items-center space-x-4">
+            <div className="w-8 h-8 px-1 py-2 bg-white rounded-full shadow border border-[#bde9f8]/95 flex-col justify-center items-center gap-2.5 inline-flex">
+              <div>
+
+              </div>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          variants={dashboardHeaderVariants}
+          initial="hidden"
+          animate="visible"
+          className="flex items-center"
+        >
+          <div className="flex items-center space-x-[2rem] md:space-x-[9rem]">
+            <AnimatePresence>
+              {navItems.map((item, index) => (
+                <motion.div
+                  key={index}
+                  variants={tabVariants}
+                  initial="hidden"
+                  animate={activeTab === index ? 'visible' : 'visible'}
+                  className={`cursor-pointer ${activeTab === index ? 'text-[#1b354f]' : 'text-black'
+                    }`}
+                  onClick={() => handleTabClick(index)}
+                >
+                  <div className="md:text-[25px] font-semibold font-['Urbanist'] capitalize">
+                    {item.label}
+                  </div>
+                  <motion.div
+                    variants={tabUnderlineVariants}
+                    initial="hidden"
+                    animate={activeTab === index ? 'visible' : 'hidden'}
+                    className="absolute -bottom-5 left-0 w-full h-1 mt-12 my-border-radius bg-[#1b354f]"
+                  />
+                </motion.div>
+              ))}
+            </AnimatePresence>
+          </div>
+        </motion.div>
+
+        <div className="md:flex items-center space-x-4 hidden">
+            <Bell className="h-6 w-6 text-gray-500" />
+            <Avatar>
+              <AvatarImage
+                src="https://via.placeholder.com/32x32"
+                alt={user.name}
+              />
+              <AvatarFallback>
+                {user.name.split(' ').map((n) => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+          </div>
       </header>
 
-      <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
+      {/* <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-4">
         <TabsList>
           <TabsTrigger value="overview">Overview</TabsTrigger>
           {isAdmin ? (
@@ -67,7 +160,7 @@ export default function Dashboard({ user = { role: 'admin', name: 'John Doe', ve
             </TabsContent>
           </>
         )}
-      </Tabs>
+      </Tabs> */}
     </div>
   )
 }
@@ -123,7 +216,7 @@ function UserOverview({ user }: any) {
           <CardTitle>Welcome, {user.name}!</CardTitle>
         </CardHeader>
         <CardContent>
-          <p>Verification Status: 
+          <p>Verification Status:
             <Badge variant={user.verificationStatus === 'verified' ? 'default' : 'secondary'} className="ml-2">
               {user.verificationStatus}
             </Badge>
