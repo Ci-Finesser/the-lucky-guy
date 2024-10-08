@@ -15,7 +15,7 @@ export default function EligibilitySection() {
         description: 'You must be within the eligible age range to participate in the movement.',
       },
     {
-      title: 'Reside in Ondo State',
+      title: 'Be an indigene Ondo State',
       icon: <HomeIcon color='white' size={20}/>,
       description: 'Your residency in Ondo State is a requirement for joining the movement.',
     },
