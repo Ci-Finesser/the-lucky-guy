@@ -257,13 +257,13 @@ export default function RegistrationFlow() {
                                                 <SelectValue placeholder="Polling Unit" />
                                             </SelectTrigger>
                                             <SelectContent className='bg-white'>
-                                                {/* {lgas && formData.ward
+                                                {lgas && formData.ward
                                                     ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards.find((ward) => ward.name === formData.ward)?.units || {}).map((units: any) => (
                                                         <SelectItem key={units?.id} value={units?.name}>
                                                             {truncateString(units.name, 25)}
                                                         </SelectItem>
                                                     ))
-                                                    : <SelectItem value="empty" disabled>Select a Ward first</SelectItem>} */}
+                                                    : <SelectItem value="empty" disabled>Select a Ward first</SelectItem>}
                                             </SelectContent>
                                         </Select>
                                     </div>
