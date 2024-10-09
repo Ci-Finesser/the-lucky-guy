@@ -175,7 +175,7 @@ export default function RegistrationFlow() {
                 </Link>
             </header>
             <div className="w-full max-w-lg mx-auto mt-16 flex flex-col justify-center items-center gap-10 relative bg-white">
-                <div>
+                <div className='px-4 md:px-0'>
                     <div className="text-center">
                         <div className="text-[#242424] text-3xl font-semibold capitalize mb-4">
                             Join the movement
@@ -367,7 +367,7 @@ export default function RegistrationFlow() {
                             )}
 
                             {step === 4 && (
-                                <div className="space-y-4">
+                                <div className="space-y-4 px-4 md:px-0">
                                     <div className='w-full px-9 py-6 bg-[#e9e9e9]/30 my-border-radius'>
                                         <h3 className="text-lg font-semibold mb-6">Registration Completed</h3>
                                         <p className='mb-6'>Go to dashboard to navigate through your account, see upcoming campaigns and events.</p>
