@@ -2,8 +2,10 @@ import { Button } from "@/components/ui/button";
 import TlgHero from "./tlg-hero";
 import { ApcFlag, ArrowDown, Tlg } from "./apc-flag";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 export default function HeroSectionImage() {
+    const router = useRouter();
     return (
         <>
             <div className="container py-24 lg:py-32">
@@ -22,7 +24,7 @@ export default function HeroSectionImage() {
                         {/* Buttons */}
                         <div className="mt-7 grid gap-3 w-full sm:inline-flex">
                             <Button onClick={() => {
-                                window.open("/auth/register", "_blank");
+                                router.push("/auth/register", "_blank");
                             }} size={"lg"} className="my-button ">Join The Movement</Button>
                             <Button variant={"ghost"} size={"lg"} className="my-button-nbg">
                                 Learn More
@@ -34,7 +36,7 @@ export default function HeroSectionImage() {
                     </div>
                 </div>
                 <div className="flex justify-center mt-12" onClick={()=> {
-                    window.scrollTo({ top: document.body.scrollHeight, behavior: "smooth" });
+                    window.scrollTo({ top: document.body.scrollHeight - 10, behavior: "smooth" });
                 }}>
                     <motion.div
                         animate={{ y: ["0px", "10px", "0px"] }} // Bouncing animation

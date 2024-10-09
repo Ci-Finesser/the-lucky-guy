@@ -14,6 +14,9 @@ import { PiBellFill, PiBellZFill, PiCallBellFill, PiNotificationBold, PiNotifica
 import { GetServerSidePropsContext, NextApiRequest } from 'next'
 import { getIronSession, IronSession } from 'iron-session'
 import { getIronSessionData, SessionData, sessionOptions } from '@/lib/session'
+import { Tlg, TlgIcon } from '@/components/apc-flag'
+import MongoDbConnection from "@/lib/database"; 
+import { ObjectId } from 'mongodb';
 
 const dashboardHeaderVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -39,9 +42,7 @@ const tabUnderlineVariants = {
 
 export default function Dashboard({ user }: any) {
   const [activeTab, setActiveTab] = useState(0);
-  if (user == null) {
-    user = { role: 'user', name: 'John Doe', verificationStatus: 'pending', walletBalance: 0 };
-  }
+
   const isAdmin = user.role === 'admin'
 
   const handleTabClick = (index: string) => {
@@ -50,7 +51,7 @@ export default function Dashboard({ user }: any) {
 
   const userNavItems = [
     { label: 'Dashboard', content: <UserOverview user={user} /> },
-    { label: 'Wallet', content: <WalletView balance={0} /> }, // Pass balance here
+    { label: 'Wallet', content: <WalletView balance={user.walletBalance} /> }, // Pass balance here
     { label: 'Events', content: <div>Events Content</div> }, // Replace with actual content
     { label: 'Community', content: <div>Community Content</div> }, // Replace with actual content
   ];
@@ -58,9 +59,9 @@ export default function Dashboard({ user }: any) {
 
   const adminNavItems = [
     { label: 'Dashboard', content: <AdminOverview /> },
-    { label: 'Members', content: <div>Members Content</div> }, // Replace with actual content
+    { label: 'Members', content: <div>Members Content</div> },
     { label: 'Funds', content: <FundManagement /> },
-    { label: 'Messaging', content: <div>Messaging Content</div> }, // Replace with actual content
+    { label: 'Messaging', content: <><div>Messaging Content</div></> }, 
   ];
 
   const navItems = isAdmin ? adminNavItems : userNavItems;
@@ -75,10 +76,8 @@ export default function Dashboard({ user }: any) {
           className="flex items-center"
         >
           <div className="flex items-center space-x-4">
-            <div className="w-8 h-8 px-1 py-2 bg-white rounded-full shadow border border-[#bde9f8]/95 flex-col justify-center items-center gap-2.5 inline-flex">
-              <div>
-
-              </div>
+            <div className="rounded-full shadow">
+              <TlgIcon />
             </div>
           </div>
         </motion.div>
@@ -133,10 +132,10 @@ export default function Dashboard({ user }: any) {
           </Avatar>
           <div className="flex flex-col">
             <div className="flex items-center space-x-2">
-            {user.name}
+              {user.name}
             </div>
             <div className="flex items-center space-x-2 text-gray-500 capitalize">
-            the lucky guy member
+              the lucky guy member
             </div>
           </div>
         </div>
@@ -327,22 +326,46 @@ interface ExtendedRequest extends GetServerSidePropsContext {
 }
 
 export const getServerSideProps = (async (context: GetServerSidePropsContext) => {
-  let user = null;
-  const session = await getIronSession<SessionData>(
-    context.req,
-    context.res,
-    sessionOptions,
-  );
-  if (!session.isLoggedIn) {
+  try {
+    const session = await getIronSession<SessionData>(
+      context.req,
+      context.res,
+      sessionOptions,
+    );
+
+    if (!session.isLoggedIn) {
+      return {
+        redirect: {
+          destination: '/auth/login',
+          permanent: false,
+        },
+      };
+    }
+
+    const sessionUser = session.user;
+    console.log('Session User: ', sessionUser);
+
+    await MongoDbConnection.connect();
+    const usersCollection = await MongoDbConnection.getCollection('users');
+    const user = await usersCollection.findOne({ _id: ObjectId.createFromTime(sessionUser.id) });
+
+    if (user) {
+      console.log('User: ', user);
+      return { props: { user } };
+    } 
+
+    console.error('User not found in database:', sessionUser.id);
     return {
       redirect: {
-        destination: '/auth/login',
+        destination: '/auth/login', // Or a suitable error page
         permanent: false,
       },
     };
+
+  } catch (error) {
+    console.error("Error in getServerSideProps:", error);
+    return {
+      props: { user: null },
+    };
   }
-
-  user = session.user;
-
-  return { props: { user } };
-})
+});

@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import MongoDbConnection from "@/lib/database"; // Assuming this is the correct path
+import MongoDbConnection from "@/lib/database"; 
 import bcrypt from 'bcrypt'; 
 import { SessionData, withSession } from "@/lib/session";
 import { IronSession } from "iron-session";
@@ -21,7 +21,7 @@ async function handler(req: ExtendedRequest, res: NextApiResponse) {
             if (user) {
                 const passwordMatch = await bcrypt.compare(password, user.password); 
                 if (passwordMatch) {
-                  req.session.user = { id: user._id, email: user.email, password: passwordMatch, name: user.name};
+                  req.session.user = {id: user._id, email: user.email, password: passwordMatch};
                   req.session.isLoggedIn = true;
                   await req.session.save();
                   res.status(200).json({ status: true, message: "Login successful" });

@@ -95,7 +95,6 @@ export default function RegistrationFlow() {
             const { occupation, lga, ward, poll_unit } = formData
 
             if (!occupation || !lga || !ward || !poll_unit) {
-                ``
                 setErrorMsg('All fields are required!')
                 return
             }
