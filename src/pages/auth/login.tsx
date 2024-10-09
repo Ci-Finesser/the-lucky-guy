@@ -41,8 +41,7 @@ export default function SignIn() {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData)
-    }).then((response) => response.json()).then(data => {
-
+    }).then((response) => response.json()).then((data) => {
       if (!data.status) {
         setIsLoading(false)
         setErrorMsg(data.message);

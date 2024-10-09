@@ -25,7 +25,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 password: hashedPassword,
                 terms: terms,
                 occupation: occupation,
-                lga: lga,
+                localGovernment: lga,
                 poll_unit: poll_unit,
                 ward: ward,
                 bank: bank,
@@ -34,6 +34,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 vcn: vcn,
                 role: 'user',
                 provider: null,
+                walletBalance: 0,
+                verificationStatus: 'pending',
                 dateCreated: new Date().toLocaleString('en-US', { 
                     year: 'numeric', 
                     month: 'long', 

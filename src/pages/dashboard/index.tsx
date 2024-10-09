@@ -11,6 +11,9 @@ import { Bell, BellDotIcon, CreditCard, FileText, Users, Wallet } from 'lucide-r
 import { motion, AnimatePresence } from 'framer-motion'
 import { Int32 } from 'mongodb'
 import { PiBellFill, PiBellZFill, PiCallBellFill, PiNotificationBold, PiNotificationFill } from 'react-icons/pi'
+import { GetServerSidePropsContext, NextApiRequest } from 'next'
+import { getIronSession, IronSession } from 'iron-session'
+import { getIronSessionData, SessionData, sessionOptions } from '@/lib/session'
 
 const dashboardHeaderVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -34,8 +37,11 @@ const tabUnderlineVariants = {
 
 
 
-export default function Dashboard({ user = { role: 'user', name: 'John Doe', verificationStatus: 'pending', walletBalance: 0 } }) {
+export default function Dashboard({ user }: any) {
   const [activeTab, setActiveTab] = useState(0);
+  if (user == null) {
+    user = { role: 'user', name: 'John Doe', verificationStatus: 'pending', walletBalance: 0 };
+  }
   const isAdmin = user.role === 'admin'
 
   const handleTabClick = (index: string) => {
@@ -122,12 +128,12 @@ export default function Dashboard({ user = { role: 'user', name: 'John Doe', ver
               alt={user.name}
             />
             <AvatarFallback>
-              {user.name.split('').map((n) => n[0]).join('')}
+              {user.name.split('').map((n: any) => n[0]).join('')}
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <div className="flex items-center space-x-2 text-gray-500">
-              ksfjkjfdkjkjnfkndff
+            <div className="flex items-center space-x-2 font-bold">
+            {user.name}
             </div>
             <div className="flex items-center space-x-2 text-gray-500">
               dkfnkdnfkdnfkjnkf
@@ -314,3 +320,29 @@ function ProfileView({ user }: any) {
     </Card>
   )
 }
+interface ExtendedRequest extends GetServerSidePropsContext {
+  req: GetServerSidePropsContext['req'] & {
+    session: IronSession<SessionData>;
+  };
+}
+
+export const getServerSideProps = (async (context: GetServerSidePropsContext) => {
+  let user = null;
+  const session = await getIronSession<SessionData>(
+    context.req,
+    context.res,
+    sessionOptions,
+  );
+  if (!session.isLoggedIn) {
+    return {
+      redirect: {
+        destination: '/auth/login',
+        permanent: false,
+      },
+    };
+  }
+
+  user = session.user;
+
+  return { props: { user } };
+})
