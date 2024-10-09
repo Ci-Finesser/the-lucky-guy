@@ -230,7 +230,7 @@ function UserOverview({ user }: any) {
     <div className="space-y-4 mt-20">
       <div className="welcome mb-20">
         <h1 className='font-semibold text-2xl md:text-3xl mb-6'>{`Welcome ${user.name},`}</h1>
-        <p className='max-w-md text-lg md:text-2xl'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
+        <p className='max-w-lg text-lg md:text-2xl'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-9">
         {criteria.map((criterion, index) => (
