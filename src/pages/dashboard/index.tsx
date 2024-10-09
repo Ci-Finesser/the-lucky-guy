@@ -7,10 +7,10 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Bell, BellDotIcon, CreditCard, FileText, Users, Wallet } from 'lucide-react'
+import { Bell, BellDotIcon, CalendarRange, CreditCard, FileText, Users, Wallet, WalletIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Int32 } from 'mongodb'
-import { PiBellFill, PiBellZFill, PiCallBellFill, PiNotificationBold, PiNotificationFill } from 'react-icons/pi'
+import { PiBellFill, PiBellZFill, PiBroadcastBold, PiCallBellFill, PiNotificationBold, PiNotificationFill } from 'react-icons/pi'
 import { GetServerSidePropsContext, NextApiRequest } from 'next'
 import { getIronSession, IronSession } from 'iron-session'
 import { getIronSessionData, SessionData, sessionOptions } from '@/lib/session'
@@ -44,7 +44,7 @@ export default function Dashboard({ user }: any) {
   const [activeTab, setActiveTab] = useState(0);
 
   console.log('Client User: ', user);
-  
+
 
   const isAdmin = user.role === 'admin'
 
@@ -78,7 +78,7 @@ export default function Dashboard({ user }: any) {
           animate="visible"
           className="flex items-center"
         >
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center md:space-x-4">
             <div className="rounded-full shadow">
               <TlgIcon />
             </div>
@@ -143,7 +143,7 @@ export default function Dashboard({ user }: any) {
           </div>
         </div>
       </header>
-      <main className="mt-10">
+      <main className="mt-10 flex justify-center items-start">
         <AnimatePresence>
           {navItems[activeTab].content}
         </AnimatePresence>
@@ -196,32 +196,53 @@ function AdminOverview() {
 }
 
 function UserOverview({ user }: any) {
+  const criteria = [
+    {
+      title: 'Campaigns',
+      icon: <PiBroadcastBold color='white' size={24} />,
+      color: 'criterion-1',
+      description: 'Number of campaigns participating in',
+      value: 0,
+    },
+    {
+      title: 'Events',
+      icon: <CalendarRange color='white' size={24} />,
+      color: 'criterion-2',
+      description: 'Ongoing events',
+      value: 0,
+    },
+    {
+      title: 'Funds In Wallet',
+      icon: <WalletIcon color='white' size={24} />,
+      color: 'criterion-3',
+      description: 'Total funds received',
+      value: `₦ ${user.walletBalance.toFixed(2)}`
+    },
+  ];
+
   return (
     <div className="space-y-4">
-      <Card>
-        <CardHeader>
-          <CardTitle>Welcome, {user.name}!</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p>Verification Status:
-            <Badge variant={user.verificationStatus === 'verified' ? 'default' : 'secondary'} className="ml-2">
-              {user.verificationStatus}
-            </Badge>
-          </p>
-          <Progress value={user.verificationStatus === 'verified' ? 100 : 50} className="mt-2" />
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader>
-          <CardTitle>Wallet Balance</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">₦{user.walletBalance.toFixed(2)}</div>
-          {user.verificationStatus !== 'verified' && (
-            <p className="text-sm text-muted-foreground mt-2">Complete verification to activate your wallet</p>
-          )}
-        </CardContent>
-      </Card>
+      <div className="welcome">
+        <h1 className='font-semibold text-xl md:text-3xl'>{`Welcome ${user.name},`}</h1>
+        <p className='max-w-md text-lg'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
+      </div>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-9">
+        {criteria.map((criterion, index) => (
+          <div key={index} className={`w-full flex flex-col my-border-radius p-5 justify-center items-start ${criterion.color}`}>
+            <div className="w-full flex items-start justify-between justified-element">
+              <p className='text-xl text-white md:text-2xl font-semibold'>{criterion.title}</p>
+              <div className=''>
+                {criterion.icon}
+              </div>
+            </div>
+            <p className="text-md text-white md:text-lg">{criterion.description}</p>
+
+            <div className="text-center text-white text-3xl font-semibold capitalize mt-8">
+              {criterion.value}
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   )
 }
@@ -346,7 +367,7 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
       };
     }
 
-    
+
 
     const sessionUser = session.user;
     console.log('Session User: ', sessionUser);

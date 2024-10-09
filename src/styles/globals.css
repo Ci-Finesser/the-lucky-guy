@@ -136,3 +136,19 @@ input[type="number"] {
   left: 50%;
   transform: translate(-50%, -50%);
 }
+
+.justified-element {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.criterion-1 {
+  background-color: #1782ee;
+}
+.criterion-2 {
+  background-color: #de1878;
+}
+.criterion-3 {
+  background-color: #2bb84f;
+}
