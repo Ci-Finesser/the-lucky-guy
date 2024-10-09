@@ -357,9 +357,9 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
 
     if (user) {
       userData = user;
-      userData._id = sessionUser.id;
+      user._id = sessionUser.id;
       console.log('User: ', userData);
-      return { props: { userData } };
+      return { props: { user } };
     }
 
     console.error('User not found in database:', sessionUser.id);
