@@ -41,11 +41,12 @@ const tabUnderlineVariants = {
 
 
 
-export default function Dashboard({ user }: any) {
+export default function Dashboard({ user, allUsers }: any) {
   const [activeTab, setActiveTab] = useState(0);
 
   console.log('Client User: ', user);
 
+  console.log('All users count: ', allUsers.length);
 
   const isAdmin = user.role === 'admin'
 
@@ -62,7 +63,7 @@ export default function Dashboard({ user }: any) {
 
 
   const adminNavItems = [
-    { label: 'Dashboard', content: <AdminOverview /> },
+    { label: 'Dashboard', content: <AdminOverview user={user} users={allUsers} /> },
     { label: 'Members', content: <div>Members Content</div> },
     { label: 'Funds', content: <FundManagement /> },
     { label: 'Messaging', content: <><div>Messaging Content</div></> },
@@ -138,8 +139,8 @@ export default function Dashboard({ user }: any) {
             <div className="flex items-center space-x-2 font-semibold">
               {user.name}
             </div>
-            <div className="flex items-center space-x-2 text-gray-500 capitalize">
-              TLG member
+            <div className="flex items-center space-x-2 text-gray-500">
+              {isAdmin ? user.email : 'TLG Member'}
             </div>
           </div>
         </div>
@@ -153,45 +154,49 @@ export default function Dashboard({ user }: any) {
   )
 }
 
-function AdminOverview() {
+function AdminOverview({ user, users }: any) {
+  const criteria = [
+    {
+      title: 'Total Members',
+      description: 'Number of registered members',
+      value: users.length,
+    },
+    {
+      title: 'Pending Requests',
+      description: 'Number of pending members',
+      value: users.filter((userData: any) => userData.verificationStatus === 'pending').length,
+    },
+    {
+      title: 'Funds Disbursed',
+      description: 'Total funds released',
+      value: `₦ ${user.walletBalance.toFixed(2)}`
+    },
+    {
+      title: 'Active Campaign',
+      description: 'ongoing campaign events',
+      value: `0`
+    },
+  ];
   return (
-    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Supporters</CardTitle>
-          <Users className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">10,482</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Pending Verifications</CardTitle>
-          <FileText className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">621</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Total Funds Disbursed</CardTitle>
-          <CreditCard className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">₦2,450,000</div>
-        </CardContent>
-      </Card>
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Active Campaigns</CardTitle>
-          <Bell className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">3</div>
-        </CardContent>
-      </Card>
+    <div className="space-y-4 mt-20 px-4 md:px-0">
+      <div className="welcome mb-20">
+        <h1 className='font-semibold text-2xl md:text-3xl mb-6'>{`Welcome ${user.name},`}</h1>
+        <p className='max-w-lg text-lg md:text-2xl'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through supporters, events and messaging</p>
+      </div>
+      <div className='flex justify-center items-center'>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-9 flex justify-center items-center">
+          {criteria.map((criterion, index) => (
+            <div key={index} className={`w-full flex flex-col my-border-radius p-9 justify-center text-center items-center shadow`}>
+              <p className='text-xl md:text-2xl font-semibold'>{criterion.title}</p>
+              <p className='text-md md:text-lg'>{criterion.description}</p>
+              <p className="text-3xl flex items-center font-semibold capitalize mt-8">
+                {criterion.value}
+              </p>
+            </div>
+          ))}
+        </div>
+
+      </div>
     </div>
   )
 }
@@ -394,19 +399,22 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
     }
 
 
-
     const sessionUser = session.user;
-    console.log('Session User: ', sessionUser);
+    // console.log('Session User: ', sessionUser);
 
     await MongoDbConnection.connect();
     const usersCollection = await MongoDbConnection.getCollection('users');
     const user = await usersCollection.findOne({ _id: new ObjectId(sessionUser.id) });
+    const allUsers = await usersCollection.find().toArray();
 
-    if (user) {
+    if (user && allUsers) {
       userData = user;
-      user._id = sessionUser.id;
-      console.log('User: ', userData);
-      return { props: { user } };
+      userData._id = userData._id.toString() as any;
+      for (let r in allUsers) {
+        allUsers[r]._id = allUsers[r]._id.toString() as any;
+      }
+      // console.log('User: ', userData);
+      return { props: { user: userData, allUsers: allUsers } };
     }
 
     console.error('User not found in database:', sessionUser.id);
@@ -420,7 +428,7 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
   } catch (error) {
     console.error("Error in getServerSideProps:", error);
     return {
-      props: { user: userData },
+      props: { user: userData, allUsers: [] },
     };
   }
 });
