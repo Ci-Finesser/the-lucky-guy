@@ -25,10 +25,10 @@ export default function SubscriptionSection() {
                             Stay up to date with the latest events, features and important information from TLG
                         </div>
                     </div>
-                    <div className="flex items-center gap-4">
+                    <div className="flex justify-center items-center gap-4 mt-4">
                         <Input
                             placeholder="Enter your email address"
-                            className="w-full shadow rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input text-lg font-medium"
+                            className="w-full mt-4 shadow rounded-lg px-5 py-3.5 h-[3.5rem] my-border-radius-input text-lg font-medium"
                             required
                             type='email'
                             {...register('email', {
@@ -40,7 +40,7 @@ export default function SubscriptionSection() {
                             })}
                         />
                         {errors.email && <span className="text-red-500">{errors.root?.message}</span>}
-                        <button type="submit" className="subscribe-button h-[4rem]">
+                        <button type="submit" className="subscribe-button h-[3.5rem] mt-4">
                             <SendIcon color='white' />
                         </button>
                     </div>
