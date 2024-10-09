@@ -4,8 +4,10 @@ import { ApcFlag, ArrowDown, Tlg } from "./apc-flag";
 import { motion } from "framer-motion";
 import CtaImage from "@/assets/cta-image.png";
 import Image from "next/image";
+import { useRouter } from "next/router";
 
 export default function CtaSectionImage() {
+    const router = useRouter();
     return (
         <>
             <div className="container py-24 lg:py-32">
@@ -23,7 +25,7 @@ export default function CtaSectionImage() {
                         </p>
                         {/* Buttons */}
                         <Button onClick={() => {
-                            window.open("/auth/register");
+                            router.push("/auth/register");
                         }} className="my-button">Join The Movement</Button>
                     </div>
                     <div className="relative ms-4 md:justify-self-end">
