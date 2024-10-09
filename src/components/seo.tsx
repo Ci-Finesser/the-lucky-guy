@@ -12,7 +12,7 @@ interface SEOProps {
 export default function SEO({ title, description, ogImage, keywords }: SEOProps) {
     const defaulName = "The Lucky Guy Youth Movement";
     const defaultTitle = "The Lucky Guy Youth Movement -  Empowering Ondo’s Youth For A Brighter Future";
-    const defaultDescription = "Revolutionizing Nigeria's creative and technological landscape through innovative solutions, talent development, and digital banking."
+    const defaultDescription = "Join us in supporting Governor Lucky Orimisan Aiyedatiwa’s vision for progress and development in Ondo State."
     const defaultOGImage = '/assets/tlg-og.jpg'
     const defaultKeywords = "Ondo state, Ondo government, Ondo, Youth, The Lucky Guy, Youth Movement, Governor, Lucky Orimisan Aiyedatiwa, Orimisan, Aiyedatiwa, Lucky, Lucky Guy"
     title = title || defaultTitle
