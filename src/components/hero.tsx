@@ -25,13 +25,13 @@ export default function HeroSectionImage() {
                         <div className="mt-7 grid gap-3 w-full sm:inline-flex">
                             <Button onClick={() => {
                                 router.push("/auth/register");
-                            }} size={"lg"} className="my-button ">Join The Movement</Button>
+                            }} size={"lg"} className="my-button justify-self-center">Join The Movement</Button>
                             <Button variant={"ghost"} size={"lg"} className="my-button-nbg">
                                 Learn More
                             </Button>
                         </div>
                     </div>
-                    <div className="relative ms-4 md:justify-self-end">
+                    <div className="relative ms-4 justify-self-center md:justify-self-end">
                         <TlgHero />
                     </div>
                 </div>
