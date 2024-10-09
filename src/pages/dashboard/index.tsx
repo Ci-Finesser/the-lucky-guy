@@ -15,7 +15,7 @@ import { GetServerSidePropsContext, NextApiRequest } from 'next'
 import { getIronSession, IronSession } from 'iron-session'
 import { getIronSessionData, SessionData, sessionOptions } from '@/lib/session'
 import { Tlg, TlgIcon } from '@/components/apc-flag'
-import MongoDbConnection from "@/lib/database"; 
+import MongoDbConnection from "@/lib/database";
 import { ObjectId } from 'mongodb';
 
 const dashboardHeaderVariants = {
@@ -43,6 +43,9 @@ const tabUnderlineVariants = {
 export default function Dashboard({ user }: any) {
   const [activeTab, setActiveTab] = useState(0);
 
+  console.log('Client User: ', user);
+  
+
   const isAdmin = user.role === 'admin'
 
   const handleTabClick = (index: string) => {
@@ -61,7 +64,7 @@ export default function Dashboard({ user }: any) {
     { label: 'Dashboard', content: <AdminOverview /> },
     { label: 'Members', content: <div>Members Content</div> },
     { label: 'Funds', content: <FundManagement /> },
-    { label: 'Messaging', content: <><div>Messaging Content</div></> }, 
+    { label: 'Messaging', content: <><div>Messaging Content</div></> },
   ];
 
   const navItems = isAdmin ? adminNavItems : userNavItems;
@@ -326,6 +329,7 @@ interface ExtendedRequest extends GetServerSidePropsContext {
 }
 
 export const getServerSideProps = (async (context: GetServerSidePropsContext) => {
+  let userData = null;
   try {
     const session = await getIronSession<SessionData>(
       context.req,
@@ -342,17 +346,21 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
       };
     }
 
+    
+
     const sessionUser = session.user;
     console.log('Session User: ', sessionUser);
 
     await MongoDbConnection.connect();
     const usersCollection = await MongoDbConnection.getCollection('users');
-    const user = await usersCollection.findOne({ _id: ObjectId.createFromTime(sessionUser.id) });
+    const user = await usersCollection.findOne({ _id: new ObjectId(sessionUser.id) });
 
     if (user) {
-      console.log('User: ', user);
-      return { props: { user } };
-    } 
+      userData = user;
+      userData._id = sessionUser.id;
+      console.log('User: ', userData);
+      return { props: { userData } };
+    }
 
     console.error('User not found in database:', sessionUser.id);
     return {
@@ -365,7 +373,7 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
   } catch (error) {
     console.error("Error in getServerSideProps:", error);
     return {
-      props: { user: null },
+      props: { user: userData },
     };
   }
 });
