@@ -79,8 +79,8 @@ export default function RegistrationFlow() {
 
     const handleNext = () => {
         if (step === 1) {
-            const { email, password, terms, name } = formData
-            if (!email || !password || !name) {
+            const { email, password, terms, name, phone } = formData
+            if (!email || !password || !name || !phone) {
                 setErrorMsg('All fields are required!')
                 return
             }
@@ -216,6 +216,9 @@ export default function RegistrationFlow() {
                                     </div>
                                     <div className="space-y-2">
                                         <Input placeholder="Email address" id="email" name="email" type="email" className="bg-neutral-100 h-[4rem] rounded-lg px-5 py-5 my-border-radius-input" required value={formData.email} onChange={handleInputChange} />
+                                    </div>
+                                    <div className="space-y-2">
+                                        <Input placeholder="Phone number" id="phone" name="phone" type="tel" className="bg-neutral-100 h-[4rem] rounded-lg px-5 py-5 my-border-radius-input" required value={formData.phone} onChange={handleInputChange} />
                                     </div>
                                     <div className="space-y-2">
                                         <div className="relative space-y-2">

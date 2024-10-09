@@ -10,6 +10,9 @@ import Link from 'next/link'
 import { EyeOff, Eye } from 'lucide-react'
 import { AppleIcon, GoogleIcon, Tlg, TlgIcon } from '@/components/apc-flag'
 import { useRouter } from 'next/router';
+import { SessionData, sessionOptions } from '@/lib/session'
+import { getIronSession } from 'iron-session'
+import { GetServerSidePropsContext } from 'next'
 interface SignInFormData {
   email: string
   password: string
@@ -142,7 +145,7 @@ export default function SignIn() {
               <Button disabled={isLoading} type="submit" onClick={handleSubmit} className="my-auth-button w-full mt-9">
                 {isLoading ? (
                   <motion.span
-                    animate={{ rotate: 360, transition: { duration: 1, repeat: Infinity }}}
+                    animate={{ rotate: 360, transition: { duration: 1, repeat: Infinity } }}
                     className="inline-block"
                   >
                     <PiSpinner className="animate-spin h-8 w-8 text-white" />
@@ -172,3 +175,31 @@ export default function SignIn() {
     </div>
   )
 }
+
+export const getServerSideProps = (async (context: GetServerSidePropsContext) => {
+  let userData = null;
+  try {
+    const session = await getIronSession<SessionData>(
+      context.req,
+      context.res,
+      sessionOptions,
+    );
+
+    if (!session.isLoggedIn) {
+      return null;
+    }
+
+    const sessionUser = session.user;
+    console.log('Session User: ', sessionUser);
+    return {
+      redirect: {
+        destination: '/dashboard',
+        permanent: false,
+      },
+    };
+
+  } catch (error) {
+    console.error("Error in getServerSideProps:", error);
+    return null;
+  }
+});
