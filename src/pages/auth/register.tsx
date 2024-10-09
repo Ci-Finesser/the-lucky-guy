@@ -9,7 +9,8 @@ import Link from 'next/link'
 import { truncateString } from '@/lib/utils'
 import { motion } from 'framer-motion'
 import { Tlg } from '@/components/apc-flag'
-
+import { useRouter } from 'next/router';
+import { PiSpinner } from 'react-icons/pi'
 interface RegistrationFormData {
     email: string
     phone: string
@@ -30,9 +31,12 @@ interface RegistrationFormData {
 }
 
 export default function RegistrationFlow() {
+    const router = useRouter();
     const [step, setStep] = useState(1)
     const [lgas, setLgas] = useState<ONDOLGA[]>([])
     const [errorMsg, setErrorMsg] = useState<string>()
+    const [successMsg, setSuccessMsg] = useState<string>()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
     const [formData, setFormData] = useState<RegistrationFormData>({
         email: '',
         phone: '',
@@ -88,9 +92,22 @@ export default function RegistrationFlow() {
         }
 
         if (step === 2) {
+            const { occupation, lga, ward, poll_unit } = formData
+
+            if (!occupation || !lga || !ward || !poll_unit) {
+                ``
+                setErrorMsg('All fields are required!')
+                return
+            }
+
+            if (!occupation) {
+                setErrorMsg('Please enter your occupation')
+                return
+            }
+        }
+        if (step === 3) {
 
         }
-        if (step === 3) { }
         setErrorMsg(undefined)
         setStep(prev => Math.min(prev + 1, totalSteps))
     }
@@ -101,15 +118,37 @@ export default function RegistrationFlow() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
-        // Handle form submission here (e.g., send data to an API)
-        fetch('/api/submitRegistrationData', {
+        const { nin, vcn } = formData
+        if (!nin || !vcn) {
+            setErrorMsg('NIN & VCN are required')
+            return
+        }
+        setIsLoading(true)
+
+        fetch('/api/auth/submitRegistrationData', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(formData)
-        }).then(response => response.json()).then(data => {
-            console.log('Form submitted:', JSON.stringify(data));
+        }).then((response) => response.json()).then(data => {
+            if (!data.status) {
+                setIsLoading(false)
+                setErrorMsg(data.message);
+                setTimeout(() => {
+                    setErrorMsg(undefined);
+                }, 2000);
+            } else {
+                setIsLoading(false)
+                setSuccessMsg(data.message);
+                console.log('Form submitted:', JSON.stringify(data));
+                setTimeout(() => {
+                    setSuccessMsg(undefined);
+                }, 2000);
+                setTimeout(() => {
+                    handleNext()
+                }, 3000);
+            }
         })
-        handleNext()
+
     }
 
     const togglePasswordVisibility = () => {
@@ -163,6 +202,11 @@ export default function RegistrationFlow() {
                         {errorMsg && (
                             <div className="m-4 text-[#ff0000] text-sm font-semibold capitalize">
                                 {errorMsg}
+                            </div>
+                        )}
+                        {successMsg && (
+                            <div className="m-4 text-green-500 text-center text-sm font-semibold capitalize">
+                                {successMsg}
                             </div>
                         )}
                         <form onSubmit={handleSubmit} className='max-w-md'>
@@ -240,64 +284,42 @@ export default function RegistrationFlow() {
                                         </SelectContent>
                                     </Select>
 
-                                    <div className="flex gap-4">
-                                        <Select
-                                            name="ward"
-                                            value={formData.ward}
-                                            onValueChange={(value) => setFormData((prev) => ({ ...prev, ward: value }))}
-                                        >
-                                            <SelectTrigger className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input">
-                                                <SelectValue placeholder="Select Ward" />
-                                            </SelectTrigger>
-                                            <SelectContent className='bg-white'>
-                                                {lgas && formData.lga
-                                                    ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards || {}).map((ward: Ward) => (
-                                                        <SelectItem key={ward?.id} value={ward?.name}>
-                                                            {truncateString(ward.name, 20) || 'Select Ward'}
-                                                        </SelectItem>
-                                                    ))
-                                                    : <SelectItem value="empty" disabled>Select a LGA first</SelectItem>}
-                                            </SelectContent>
-                                        </Select>
-                                        <Select
-                                            name="poll_unit"
-                                            value={formData.poll_unit}
-                                            onValueChange={(value) => setFormData((prev) => ({ ...prev, poll_unit: value }))}
-                                        >
-                                            <SelectTrigger className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input">
-                                                <SelectValue placeholder="Polling Unit" />
-                                            </SelectTrigger>
-                                            <SelectContent className='bg-white'>
-                                                {lgas && formData.ward
-                                                    ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards.find((ward) => ward.name === formData.ward)?.units || {}).map((units: any) => (
-                                                        <SelectItem key={units?.id} value={units?.name}>
-                                                            {truncateString(units.name, 25)}
-                                                        </SelectItem>
-                                                    ))
-                                                    : <SelectItem value="empty" disabled>Select a Ward first</SelectItem>}
-                                            </SelectContent>
-                                        </Select>
-                                    </div>
-
-                                    <Input
-                                        placeholder="Enter Bank Name"
-                                        className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
-                                        value={formData.bank}
-                                        type='text'
-                                        name='bank'
-                                        onChange={handleInputChange}
-                                    />
-
-
-                                    <Input
-                                        placeholder="Enter Account Number"
-                                        className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
-                                        value={formData.accountNumber}
-                                        type='number'
-                                        name='accountNumber'
-                                        onChange={handleInputChange}
-                                        maxLength={11}
-                                    />
+                                    <Select
+                                        name="ward"
+                                        value={formData.ward}
+                                        onValueChange={(value) => setFormData((prev) => ({ ...prev, ward: value }))}
+                                    >
+                                        <SelectTrigger className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input">
+                                            <SelectValue placeholder="Select Ward" />
+                                        </SelectTrigger>
+                                        <SelectContent className='bg-white'>
+                                            {lgas && formData.lga
+                                                ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards || {}).map((ward: Ward) => (
+                                                    <SelectItem key={ward?.id} value={ward?.name}>
+                                                        {truncateString(ward.name, 20) || 'Select Ward'}
+                                                    </SelectItem>
+                                                ))
+                                                : <SelectItem value="empty" disabled>Select a LGA first</SelectItem>}
+                                        </SelectContent>
+                                    </Select>
+                                    <Select
+                                        name="poll_unit"
+                                        value={formData.poll_unit}
+                                        onValueChange={(value) => setFormData((prev) => ({ ...prev, poll_unit: value }))}
+                                    >
+                                        <SelectTrigger className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input">
+                                            <SelectValue placeholder="Polling Unit" />
+                                        </SelectTrigger>
+                                        <SelectContent className='bg-white'>
+                                            {lgas && formData.ward
+                                                ? Object.values(lgas.find((lga) => lga.name === formData.lga)?.wards.find((ward) => ward.name === formData.ward)?.units || {}).map((units: any) => (
+                                                    <SelectItem key={units?.id} value={units?.name}>
+                                                        {truncateString(units.name, 25)}
+                                                    </SelectItem>
+                                                ))
+                                                : <SelectItem value="empty" disabled>Select a Ward first</SelectItem>}
+                                        </SelectContent>
+                                    </Select>
                                 </div>
                             )}
                             {step === 3 && (
@@ -321,34 +343,32 @@ export default function RegistrationFlow() {
                                         onChange={handleInputChange}
                                         required
                                     />
-                                    <div className="flex items-center justify-center w-full">
-                                        <label htmlFor="selfie" className="w-full h-64 my-border-radius-input border-dashed cursor-pointer bg-gray-50 hover:bg-gray-100">
-                                            <div className='flex flex-col items-start justify-start pl-9 pt-4'>
-                                                <p className="mb-2 text-md text-gray-500"><span className="font-semibold">Upload selfie with voter’s card</span></p>
-                                            </div>
-                                            <div className="flex flex-col items-center justify-center pt-5 pb-6">
-                                                <Upload className="w-8 h-8 mb-4 text-gray-500" />
-                                                <p className="mb-2 text-sm text-gray-500"><span className="font-semibold">Click or drag and drop to upload</span></p>
-                                                <p className="text-xs text-gray-500">only supported format is JPEG or PNG</p>
-                                            </div>
-                                            <Input id="selfie" name="selfie" type="file" accept="image/*" capture="user" className="hidden" onChange={handleFileUpload('selfie')} />
-                                        </label>
-                                    </div>
+                                    <Input
+                                        placeholder="Bank Name (optional)"
+                                        className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
+                                        value={formData.bank}
+                                        type='text'
+                                        name='bank'
+                                        onChange={handleInputChange}
+                                    />
 
-                                    {formData.selfie && (
-                                        <div className="flex items-center mt-2">
-                                            <CheckCircle2 className="w-5 h-5 text-green-500 mr-2" />
-                                            <span className="text-sm text-gray-500">File uploaded: {formData.selfie.name}</span>
-                                        </div>
-                                    )}
+                                    <Input
+                                        placeholder="Account Number (optional)"
+                                        className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
+                                        value={formData.accountNumber}
+                                        type='number'
+                                        name='accountNumber'
+                                        onChange={handleInputChange}
+                                        maxLength={11}
+                                    />
                                 </div>
                             )}
 
                             {step === 4 && (
                                 <div className="space-y-4">
                                     <div className='w-full px-9 py-6 bg-[#e9e9e9]/30 my-border-radius'>
-                                        <h3 className="text-lg font-semibold mb-6">Verification Submitted</h3>
-                                        <p className='mb-6'>Thank you for submitting your verification documents. Our team will review your submission and get back to you shortly.</p>
+                                        <h3 className="text-lg font-semibold mb-6">Registration Completed</h3>
+                                        <p className='mb-6'>Go to dashboard to navigate through your account, see upcoming campaigns and events.</p>
                                         <div className="flex items-center space-x-2 text-yellow-600">
                                             <AlertCircle className="w-5 h-5" />
                                             <span>Verification Status: Pending</span>
@@ -359,13 +379,22 @@ export default function RegistrationFlow() {
 
                             <div className="flex flex-col justify-center mt-9 gap-3">
                                 {step === (totalSteps) && (
-                                    <Button type="button" onClick={() => console.log("Redirect to dashboard")} className="my-auth-button">
+                                    <Button type="button" onClick={() => router.push('/dashboard')} className="my-auth-button">
                                         Done
                                     </Button>
                                 )}
                                 {step === (totalSteps - 1) && (
-                                    <Button type="submit" onClick={handleSubmit} className="my-auth-button">
-                                        Submit
+                                    <Button disabled={isLoading} type="submit" onClick={handleSubmit} className="my-auth-button">
+                                        {isLoading ? (
+                                            <motion.span
+                                                animate={{ rotate: 360, transition: { duration: 1, repeat: Infinity } }}
+                                                className="inline-block"
+                                            >
+                                                <PiSpinner className="animate-spin h-8 w-8 text-white" />
+                                            </motion.span>
+                                        ) : (
+                                            "Submit"
+                                        )}
                                     </Button>
                                 )}
                                 {step < (totalSteps - 1) && (

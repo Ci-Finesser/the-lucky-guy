@@ -5,7 +5,7 @@ class MongoDbConnection {
   private db: any;
 
   constructor() {
-    this.client = new MongoClient('mongodb+srv://astrodev:79597959@cluster0.8ylkhdm.mongodb.net/?retryWrites=true&w=majority');
+    this.client = new MongoClient('mongodb+srv://astrodev:79597959@cluster0.8ylkhdm.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0');
     this.db = this.client.db("tlg_movement");
   }
 
