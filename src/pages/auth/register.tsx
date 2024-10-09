@@ -8,7 +8,7 @@ import { ONDOLGA, Ward } from '@/types'
 import Link from 'next/link'
 import { truncateString } from '@/lib/utils'
 import { motion } from 'framer-motion'
-import { Tlg } from '@/components/apc-flag'
+import { Tlg, TlgIcon } from '@/components/apc-flag'
 import { useRouter } from 'next/router';
 import { PiSpinner } from 'react-icons/pi'
 interface RegistrationFormData {
@@ -166,7 +166,7 @@ export default function RegistrationFlow() {
                 >
                     <div className="flex items-center space-x-4">
                         <div className="rounded-full shadow">
-                            <Tlg />
+                            <TlgIcon />
                         </div>
                     </div>
                 </motion.div>

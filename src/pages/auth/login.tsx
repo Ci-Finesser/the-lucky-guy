@@ -78,7 +78,7 @@ export default function SignIn() {
         >
           <div className="flex items-center space-x-4">
             <div className="rounded-full shadow">
-              <Tlg />
+            <TlgIcon />
             </div>
           </div>
         </motion.div>
@@ -177,7 +177,6 @@ export default function SignIn() {
 }
 
 export const getServerSideProps = (async (context: GetServerSidePropsContext) => {
-  let userData = null;
   try {
     const session = await getIronSession<SessionData>(
       context.req,
@@ -186,11 +185,10 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
     );
 
     if (!session.isLoggedIn) {
-      return null;
+      return {props: { data: null }};
     }
 
     const sessionUser = session.user;
-    console.log('Session User: ', sessionUser);
     return {
       redirect: {
         destination: '/dashboard',
@@ -200,6 +198,6 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
 
   } catch (error) {
     console.error("Error in getServerSideProps:", error);
-    return null;
+    return { props: { data: null } };
   }
 });
