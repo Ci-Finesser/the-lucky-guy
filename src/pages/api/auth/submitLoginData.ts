@@ -26,14 +26,14 @@ async function handler(req: ExtendedRequest, res: NextApiResponse) {
                   await req.session.save();
                   res.status(200).json({ status: true, message: "Login successful" });
                 } else {
-                  res.status(401).json({ status: false, message: "Invalid credentials" });
+                  res.status(401).json({ status: false, message: "Invalid email or password" });
                 }
               } else {
-                res.status(401).json({ status: false, message: "Invalid credentials" });
+                res.status(401).json({ status: false, message: "Email address doesn't exist" });
               }
         } catch (error) {
             console.error("Error during login:", error);
-            res.status(500).json({ status: false, message: "Internal server error" });
+            res.status(500).json({ status: false, message: "Something went wrong. Try again" });
         }
     } else {
         res.status(405).json({ status: false, message: "Method not allowed" });

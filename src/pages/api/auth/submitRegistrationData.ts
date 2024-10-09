@@ -1,7 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import MongoDbConnection from "@/lib/database"; // Assuming this is the correct path
 import bcrypt from 'bcrypt';
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+import { SessionData } from "@/lib/session";
+import { IronSession } from "iron-session";
+
+interface ExtendedRequest extends NextApiRequest {
+    session: IronSession<SessionData>; // Use the IronSession type here
+}
+export default async function handler(req: ExtendedRequest, res: NextApiResponse) {
     if (req.method === "POST") {
         try {
             const { email, phone, name, password, terms, occupation, lga, poll_unit, ward, bank, accountNumber, nin, vcn } = req.body;
@@ -36,29 +42,32 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
                 provider: null,
                 walletBalance: 0,
                 verificationStatus: 'pending',
-                dateCreated: new Date().toLocaleString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric', 
-                    hour: 'numeric', 
-                    minute: 'numeric', 
-                    second: 'numeric', 
-                    hour12: true 
+                dateCreated: new Date().toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: true
                 }),
-                dateUpdated: new Date().toLocaleString('en-US', { 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric', 
-                    hour: 'numeric', 
-                    minute: 'numeric', 
-                    second: 'numeric', 
-                    hour12: true 
+                dateUpdated: new Date().toLocaleString('en-US', {
+                    year: 'numeric',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: 'numeric',
+                    second: 'numeric',
+                    hour12: true
                 })
             };
 
             const result = await usersCollection.insertOne(newUser);
 
             if (result.acknowledged) {
+                req.session.user = { id: result.insertedId };
+                req.session.isLoggedIn = true;
+                await req.session.save();
                 res.status(200).json({ status: true, message: "Registration successful" });
             } else {
                 res.status(401).json({ status: false, message: "Invalid credentials" });
