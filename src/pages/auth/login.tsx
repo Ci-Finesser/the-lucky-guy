@@ -10,7 +10,6 @@ import Link from 'next/link'
 import { EyeOff, Eye } from 'lucide-react'
 import { AppleIcon, GoogleIcon, Tlg, TlgIcon } from '@/components/apc-flag'
 import { useRouter } from 'next/router';
-import { GoogleLogin } from 'react-google-login';
 interface SignInFormData {
   email: string
   password: string
