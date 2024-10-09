@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Bell, BellDotIcon, CalendarRange, CreditCard, FileText, Users, Wallet, WalletIcon } from 'lucide-react'
+import { Bell, BellDotIcon, CalendarRange, CreditCard, Eye, EyeOff, FileText, Users, Wallet, WalletIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Int32 } from 'mongodb'
 import { PiBellFill, PiBellZFill, PiBroadcastBold, PiCallBellFill, PiNotificationBold, PiNotificationFill } from 'react-icons/pi'
@@ -17,6 +17,7 @@ import { getIronSessionData, SessionData, sessionOptions } from '@/lib/session'
 import { Tlg, TlgIcon } from '@/components/apc-flag'
 import MongoDbConnection from "@/lib/database";
 import { ObjectId } from 'mongodb';
+import { truncateString } from '@/lib/utils'
 
 const dashboardHeaderVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -196,6 +197,7 @@ function AdminOverview() {
 }
 
 function UserOverview({ user }: any) {
+  const [showFundsData, setShowFundsData] = useState(false);
   const criteria = [
     {
       title: 'Campaigns',
@@ -220,11 +222,15 @@ function UserOverview({ user }: any) {
     },
   ];
 
+  const toggleFundsDataVisibility = () => {
+    setShowFundsData(!showFundsData);
+  };
+
   return (
-    <div className="space-y-4">
-      <div className="welcome">
-        <h1 className='font-semibold text-xl md:text-3xl'>{`Welcome ${user.name},`}</h1>
-        <p className='max-w-md text-lg'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
+    <div className="space-y-4 mt-20">
+      <div className="welcome mb-20">
+        <h1 className='font-semibold text-2xl md:text-3xl mb-6'>{`Welcome ${user.name},`}</h1>
+        <p className='max-w-md text-lg md:text-2xl'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-9">
         {criteria.map((criterion, index) => (
@@ -237,8 +243,28 @@ function UserOverview({ user }: any) {
             </div>
             <p className="text-md text-white md:text-lg">{criterion.description}</p>
 
-            <div className="text-center text-white text-3xl font-semibold capitalize mt-8">
-              {criterion.value}
+            <div className="w-full flex items-start justify-between justified-element mt-8">
+              <p className="text-white text-3xl flex items-center font-semibold capitalize">
+
+                {criterion.title == "Funds In Wallet" ? (
+                  <>
+                    {showFundsData ? criterion.value : '******'}
+                    <span
+                      className="ml-3"
+                      onClick={toggleFundsDataVisibility}
+                    >
+                      {showFundsData ? <EyeOff size={20} color='white' /> : <Eye size={20} color='white' />}
+                    </span>
+                  </>
+                ) : <>{criterion.value}</>}
+
+              </p>
+              {criterion.title == "Funds In Wallet" && (
+                <div className="flex flex-col items-end">
+                  <p className='text-white'>{showFundsData ? truncateString(user.accountNumber, 10) ?? '' : '******'}</p>
+                  <p className='text-white'>Bank: <span className='uppercase'>{showFundsData ? truncateString(user.bank, 10) ?? '' : '******'}</span></p>
+                </div>
+              )}
             </div>
           </div>
         ))}
