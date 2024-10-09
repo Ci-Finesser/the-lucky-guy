@@ -24,7 +24,7 @@ export default function HeroSectionImage() {
                         {/* Buttons */}
                         <div className="mt-7 grid gap-3 w-full sm:inline-flex">
                             <Button onClick={() => {
-                                router.push("/auth/register", "_blank");
+                                router.push("/auth/register");
                             }} size={"lg"} className="my-button ">Join The Movement</Button>
                             <Button variant={"ghost"} size={"lg"} className="my-button-nbg">
                                 Learn More

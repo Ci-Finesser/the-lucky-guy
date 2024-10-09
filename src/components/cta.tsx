@@ -23,7 +23,7 @@ export default function CtaSectionImage() {
                         </p>
                         {/* Buttons */}
                         <Button onClick={() => {
-                            window.open("/auth/register", "_blank");
+                            window.open("/auth/register");
                         }} className="my-button">Join The Movement</Button>
                     </div>
                     <div className="relative ms-4 md:justify-self-end">

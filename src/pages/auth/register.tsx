@@ -158,7 +158,7 @@ export default function RegistrationFlow() {
 
     return (
         <div className="container">
-            <header className='w-full h-20 flex items-center justify-between px-8'>
+            <header className='w-full h-20 flex items-center justify-between p-12'>
                 <motion.div
                     initial="hidden"
                     animate="visible"

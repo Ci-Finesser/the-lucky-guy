@@ -70,7 +70,7 @@ export default function SignIn() {
 
   return (
     <div className="container">
-      <header className='w-full h-20 flex items-center justify-between px-8'>
+      <header className='w-full h-20 flex items-center justify-between p-12'>
         <motion.div
           initial="hidden"
           animate="visible"
@@ -92,12 +92,12 @@ export default function SignIn() {
             <div className="text-[#242424] text-3xl font-semibold capitalize mb-4">
               Welcome Back
             </div>
-            <div className="text-neutral-500 text-md font-medium capitalize">
+            <div className="text-neutral-500 font-medium capitalize">
               Create your account to get involved and join the movement
             </div>
           </div>
 
-          <div className='mt-12 w-full max-w-lg'>
+          <div className='mt-12 w-full max-w-md px-4 md:px-0'>
             {errorMsg && (
               <div className="m-4 text-[#ff0000] text-center text-sm font-semibold capitalize">
                 {errorMsg}
@@ -154,7 +154,7 @@ export default function SignIn() {
                   "Sign In"
                 )}
               </Button>
-              <div className='text-center font-bold my-5'>
+              {/* <div className='text-center font-bold my-5'>
                 Or
               </div>
               <div className="socials flex flex-col items-center justify-center">
@@ -167,7 +167,7 @@ export default function SignIn() {
                     <AppleIcon />
                   </div>
                 </div>
-              </div>
+              </div> */}
             </form>
           </div>
         </div>
