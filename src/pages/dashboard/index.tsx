@@ -134,11 +134,11 @@ export default function Dashboard({ user }: any) {
             </AvatarFallback>
           </Avatar>
           <div className="flex flex-col">
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-2 font-semibold">
               {user.name}
             </div>
             <div className="flex items-center space-x-2 text-gray-500 capitalize">
-              the lucky guy member
+              TLG member
             </div>
           </div>
         </div>
