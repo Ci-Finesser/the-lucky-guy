@@ -76,15 +76,15 @@ export const AppleIcon = () => (
 export const TlgIcon = () => (
     <svg width="55" height="56" viewBox="0 0 55 56" fill="none" xmlns="http://www.w3.org/2000/svg">
         <g filter="url(#filter0_d_198_488)">
-            <rect x="1" width="53" height="53" rx="74.5" fill="white" shape-rendering="crispEdges" />
-            <rect x="1.5" y="0.5" width="52" height="52" rx="74" stroke="#BEEAF9" stroke-opacity="1.97" shape-rendering="crispEdges" />
+            <rect x="1" width="53" height="53" rx="74.5" fill="white" shapeRendering="crispEdges" />
+            <rect x="1.5" y="0.5" width="52" height="52" rx="74" stroke="#BEEAF9" strokeOpacity="1.97" shapeRendering="crispEdges" />
             <path d="M23.4845 22.3V23.444H21.0315V30H19.8875V23.444H17.44V22.3H23.4845Z" fill="#E62B34" />
             <path d="M24.5887 30V22.3H25.7327V28.856H29.0492V30H24.5887Z" fill="#5DC4E7" />
             <path d="M33.2285 30.143C32.6932 30.143 32.1945 30.0403 31.7325 29.835C31.2742 29.626 30.8727 29.3382 30.528 28.9715C30.187 28.6012 29.9194 28.174 29.725 27.69C29.5344 27.206 29.439 26.6908 29.439 26.1445C29.439 25.5688 29.5417 25.039 29.747 24.555C29.9524 24.071 30.2329 23.6512 30.5885 23.2955C30.9442 22.9362 31.3494 22.6575 31.804 22.4595C32.2624 22.2615 32.7427 22.1625 33.245 22.1625C33.8134 22.1625 34.3597 22.2945 34.884 22.5585C35.4084 22.8225 35.8649 23.2185 36.2535 23.7465L35.2305 24.302C34.9665 23.972 34.6585 23.7227 34.3065 23.554C33.9582 23.3853 33.6007 23.301 33.234 23.301C32.8784 23.301 32.541 23.3743 32.222 23.521C31.903 23.664 31.6207 23.8657 31.375 24.126C31.1294 24.3827 30.935 24.6852 30.792 25.0335C30.6527 25.3782 30.583 25.754 30.583 26.161C30.583 26.5533 30.6509 26.9218 30.7865 27.2665C30.9259 27.6112 31.1165 27.9137 31.3585 28.174C31.6042 28.4307 31.8865 28.6323 32.2055 28.779C32.5282 28.9257 32.8729 28.999 33.2395 28.999C33.5109 28.999 33.7712 28.955 34.0205 28.867C34.2699 28.779 34.5009 28.6543 34.7135 28.493C34.9299 28.328 35.1187 28.1318 35.28 27.9045C35.4414 27.6772 35.5697 27.4242 35.665 27.1455H34.0315V26.1335H37.007C37.0144 26.6835 36.919 27.2005 36.721 27.6845C36.5267 28.1685 36.2554 28.5957 35.907 28.966C35.5624 29.3327 35.1609 29.6205 34.7025 29.8295C34.2442 30.0385 33.7529 30.143 33.2285 30.143Z" fill="#3AA555" />
         </g>
         <defs>
-            <filter id="filter0_d_198_488" x="0" y="0" width="55" height="56" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
-                <feFlood flood-opacity="0" result="BackgroundImageFix" />
+            <filter id="filter0_d_198_488" x="0" y="0" width="55" height="56" filterUnits="userSpaceOnUse" colorInterpolationFilters="sRGB">
+                <feFlood floodOpacity="0" result="BackgroundImageFix" />
                 <feColorMatrix in="SourceAlpha" type="matrix" values="0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 227 0" result="hardAlpha" />
                 <feOffset dy="4" />
                 <feGaussianBlur stdDeviation="1.5" />

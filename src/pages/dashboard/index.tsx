@@ -64,7 +64,7 @@ export default function Dashboard({ user, allUsers }: any) {
 
   const adminNavItems = [
     { label: 'Dashboard', content: <AdminOverview user={user} users={allUsers} /> },
-    { label: 'Members', content: <div>Members Content</div> },
+    { label: 'Members', content: <AdminMembers user={user} users={allUsers} /> },
     { label: 'Funds', content: <FundManagement /> },
     { label: 'Messaging', content: <><div>Messaging Content</div></> },
   ];
@@ -195,9 +195,48 @@ function AdminOverview({ user, users }: any) {
             </div>
           ))}
         </div>
-
       </div>
     </div>
+  )
+}
+
+function AdminMembers({ user, users }: any) {
+  const [activeTab, setActiveTab] = useState(0);
+  const criteria = [
+    {
+      title: 'Total Members',
+      description: 'Number of registered members',
+      value: users.length,
+      content: <div>Total Members</div>
+    },
+    {
+      title: 'Pending Requests',
+      description: 'Number of pending members',
+      value: users.filter((userData: any) => userData.verificationStatus === 'pending').length,
+      content: <div>Pending Requests</div>
+    },
+  ];
+  return (
+    <>
+      <div className='flex flex-col justify-start items-center'>
+        <div className="gap-9 flex flex-col md:flex-row justify-center items-center">
+          {criteria.map((criterion, index) => (
+            <div key={index} className={`w-full cursor-pointer min-w-[25rem] flex flex-col my-border-radius p-9 justify-center text-center items-center shadow ${activeTab === index ? 'bg-[#EDF6FF]' : 'text-yellow'}`} onClick={() => setActiveTab(index)}>
+              <p className='text-xl md:text-2xl font-semibold'>{criterion.title}</p>
+              <p className='stretch w-full text-md md:text-lg'>{criterion.description}</p>
+              <p className="text-3xl flex items-center font-semibold capitalize mt-8">
+                {criterion.value}
+              </p>
+            </div>
+          ))}
+        </div>
+        <div className='mt-10'>
+          <AnimatePresence>
+            {criteria[activeTab].content}
+          </AnimatePresence>
+        </div>
+      </div>
+    </>
   )
 }
 
@@ -262,7 +301,6 @@ function UserOverview({ user }: any) {
                     </span>
                   </>
                 ) : <>{criterion.value}</>}
-
               </p>
               {criterion.title == "Funds In Wallet" && (
                 <div className="flex flex-col items-end">
