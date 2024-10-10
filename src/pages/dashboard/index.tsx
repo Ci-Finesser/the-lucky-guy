@@ -207,13 +207,13 @@ function AdminMembers({ user, users }: any) {
       title: 'Total Members',
       description: 'Number of registered members',
       value: users.length,
-      content: <div>Total Members</div>
+      content: <TotalMembersTable users={users} />
     },
     {
       title: 'Pending Requests',
       description: 'Number of pending members',
       value: users.filter((userData: any) => userData.verificationStatus === 'pending').length,
-      content: <div>Pending Requests</div>
+      content: <PendingRequestsTable users={users} />
     },
   ];
   return (
@@ -221,7 +221,7 @@ function AdminMembers({ user, users }: any) {
       <div className='flex flex-col justify-start items-center'>
         <div className="gap-9 flex flex-col md:flex-row justify-center items-center">
           {criteria.map((criterion, index) => (
-            <div key={index} className={`w-full cursor-pointer min-w-[25rem] flex flex-col my-border-radius p-9 justify-center text-center items-center shadow ${activeTab === index ? 'bg-[#EDF6FF]' : 'text-yellow'}`} onClick={() => setActiveTab(index)}>
+            <div key={index} className={`w-full cursor-pointer min-w-[25rem] flex flex-col my-border-radius p-9 justify-center text-center items-center shadow-lg ${activeTab === index ? 'bg-[#EDF6FF]' : 'text-yellow'}`} onClick={() => setActiveTab(index)}>
               <p className='text-xl md:text-2xl font-semibold'>{criterion.title}</p>
               <p className='stretch w-full text-md md:text-lg'>{criterion.description}</p>
               <p className="text-3xl flex items-center font-semibold capitalize mt-8">
@@ -238,6 +238,95 @@ function AdminMembers({ user, users }: any) {
       </div>
     </>
   )
+}
+
+function TotalMembersTable({ users }: any) {
+  const [sortDirection, setSortDirection] = useState('asc');
+  const [sortField, setSortField] = useState('name');
+  const [filteredUsers, setFilteredUsers] = useState(users);
+
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+    setFilteredUsers(
+      filteredUsers.sort((a: any, b: any) => {
+        if (a[field] < b[field]) {
+          return sortDirection === 'asc' ? -1 : 1;
+        }
+        if (a[field] > b[field]) {
+          return sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+      })
+    );
+  };
+
+  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => {}
+
+  return (
+    <div>Total Members</div>
+  );
+}
+interface User {
+  _id: string;
+  name: string;
+  email: string;
+  phone: string;
+  lga: string;
+  ward: string;
+  poll_unit: string;
+  verificationStatus: 'pending' | 'verified' | 'rejected';
+  createdAt: Date;
+}
+
+
+
+function PendingRequestsTable({ users }: any) {
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [sortField, setSortField] = useState<keyof User | null>(null);
+  const [filteredUsers, setFilteredUsers] = useState(users);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
+
+  const handleSort = (field: keyof User) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+    } else {
+      setSortField(field);
+      setSortDirection('asc');
+    }
+
+    setFilteredUsers(
+      filteredUsers.sort((a: any, b: any) => {
+        if (a[field] < b[field]) {
+          return sortDirection === 'asc' ? -1 : 1;
+        }
+        if (a[field] > b[field]) {
+          return sortDirection === 'asc' ? 1 : -1;
+        }
+        return 0;
+      })
+    );
+  };
+
+  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(event.target.value);
+  };
+
+  const handleStatusFilterChange = (value: string) => {
+    setStatusFilter(value);
+  };
+
+  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => {}
+
+  return (
+    <div>Pending Requests</div>
+  );
+
 }
 
 function UserOverview({ user }: any) {
@@ -276,9 +365,9 @@ function UserOverview({ user }: any) {
         <h1 className='font-semibold text-2xl md:text-3xl mb-6'>{`Welcome ${user.name},`}</h1>
         <p className='max-w-lg text-lg md:text-2xl'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-9">
+      <div className="gap-9 flex flex-col md:flex-row justify-center items-center">
         {criteria.map((criterion, index) => (
-          <div key={index} className={`w-full flex flex-col my-border-radius p-5 justify-center items-start ${criterion.color}`}>
+          <div key={index} className={`w-full flex flex-col my-border-radius shadow-lg p-5 justify-center items-start ${criterion.color}`}>
             <div className="w-full flex items-start justify-between justified-element">
               <p className='text-xl text-white md:text-2xl font-semibold'>{criterion.title}</p>
               <div className=''>

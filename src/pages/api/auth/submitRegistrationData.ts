@@ -1,13 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import MongoDbConnection from "@/lib/database"; // Assuming this is the correct path
 import bcrypt from 'bcrypt';
-import { SessionData } from "@/lib/session";
+import { SessionData, withSession } from "@/lib/session";
 import { IronSession } from "iron-session";
 
 interface ExtendedRequest extends NextApiRequest {
     session: IronSession<SessionData>; // Use the IronSession type here
 }
-export default async function handler(req: ExtendedRequest, res: NextApiResponse) {
+async function handler(req: ExtendedRequest, res: NextApiResponse) {
     if (req.method === "POST") {
         try {
             const { email, phone, name, password, terms, occupation, lga, poll_unit, ward, bank, accountNumber, nin, vcn } = req.body;
@@ -64,13 +64,13 @@ export default async function handler(req: ExtendedRequest, res: NextApiResponse
 
             const result = await usersCollection.insertOne(newUser);
 
-            if (result.acknowledged) {
+            if (result.acknowledged && result.insertedId) {
                 req.session.user = { id: result.insertedId };
                 req.session.isLoggedIn = true;
                 await req.session.save();
                 res.status(200).json({ status: true, message: "Registration successful" });
             } else {
-                res.status(401).json({ status: false, message: "Invalid credentials" });
+                res.status(401).json({ status: false, message: "Something went wrong. Try again" });
             }
         } catch (error) {
             console.error("Error during registration:", error);
@@ -80,3 +80,5 @@ export default async function handler(req: ExtendedRequest, res: NextApiResponse
         res.status(405).json({ status: false, message: "Method not allowed" });
     }
 }
+
+export default withSession(handler);

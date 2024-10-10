@@ -154,8 +154,6 @@ export default function RegistrationFlow() {
         setShowPassword(!showPassword);
     };
 
-    const jj = truncateString(formData.poll_unit, 20)
-
     return (
         <div className="container">
             <header className='w-full h-20 flex items-center justify-between p-12'>
@@ -329,7 +327,8 @@ export default function RegistrationFlow() {
                                     <Input
                                         placeholder="Enter NIN"
                                         name='nin'
-                                        type='number'
+                                        type='text'
+                                        maxLength={11}
                                         className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
                                         value={formData.nin}
                                         onChange={handleInputChange}
@@ -339,7 +338,8 @@ export default function RegistrationFlow() {
                                     <Input
                                         placeholder="Voter's Card Number"
                                         name='vcn'
-                                        type='number'
+                                        type='text'
+                                        maxLength={11}
                                         className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
                                         value={formData.vcn}
                                         onChange={handleInputChange}
