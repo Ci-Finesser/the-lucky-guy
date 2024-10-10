@@ -117,9 +117,24 @@ export default function RegistrationFlow() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
-        const { nin, vcn } = formData
+        const { nin, vcn, accountNumber } = formData
         if (!nin || !vcn) {
             setErrorMsg('NIN & VCN are required')
+            return
+        }
+
+        if (nin.length < 11) {
+            setErrorMsg('Invalid NIN')
+            return
+        }
+
+        if (vcn.length < 11 || vcn.length > 19) {
+            setErrorMsg("Invalid Voter's card number")
+            return
+        }
+
+        if (accountNumber && accountNumber.length < 10){
+            setErrorMsg("Invalid account number")
             return
         }
         setIsLoading(true)
@@ -339,7 +354,8 @@ export default function RegistrationFlow() {
                                         placeholder="Voter's Card Number"
                                         name='vcn'
                                         type='text'
-                                        maxLength={11}
+                                        maxLength={19}
+                                        minLength={11}
                                         className="bg-neutral-100/20 rounded-lg px-5 py-3.5 h-[4rem] my-border-radius-input"
                                         value={formData.vcn}
                                         onChange={handleInputChange}

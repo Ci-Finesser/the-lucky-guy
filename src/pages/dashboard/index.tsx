@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Progress } from "@/components/ui/progress"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Badge } from "@/components/ui/badge"
-import { Bell, BellDotIcon, CalendarRange, CreditCard, Eye, EyeOff, FileText, Users, Wallet, WalletIcon } from 'lucide-react'
+import { Bell, BellDotIcon, Box, CalendarRange, CreditCard, Eye, EyeOff, FileText, Users, Wallet, WalletIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Int32 } from 'mongodb'
 import { PiBellFill, PiBellZFill, PiBroadcastBold, PiCallBellFill, PiNotificationBold, PiNotificationFill } from 'react-icons/pi'
@@ -186,7 +186,7 @@ function AdminOverview({ user, users }: any) {
       <div className='flex justify-center items-center'>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-9 flex justify-center items-center">
           {criteria.map((criterion, index) => (
-            <div key={index} className={`w-full flex flex-col my-border-radius p-9 justify-center text-center items-center shadow`}>
+            <div key={index} className={`w-full flex flex-col my-border-radius p-9 justify-center text-center items-center shadow-lg`}>
               <p className='text-xl md:text-2xl font-semibold'>{criterion.title}</p>
               <p className='text-md md:text-lg'>{criterion.description}</p>
               <p className="text-3xl flex items-center font-semibold capitalize mt-8">
@@ -218,10 +218,18 @@ function AdminMembers({ user, users }: any) {
   ];
   return (
     <>
-      <div className='flex flex-col justify-start items-center'>
-        <div className="gap-9 flex flex-col md:flex-row justify-center items-center">
+      <div className='flex flex-col justify-start items-center px-4 md:px-0'>
+        <div
+          className="gap-9 flex flex-col md:flex-row justify-center items-center"
+          style={{ width: '100%' }}
+        >
           {criteria.map((criterion, index) => (
-            <div key={index} className={`w-full cursor-pointer min-w-[25rem] flex flex-col my-border-radius p-9 justify-center text-center items-center shadow-lg ${activeTab === index ? 'bg-[#EDF6FF]' : 'text-yellow'}`} onClick={() => setActiveTab(index)}>
+            <div
+              key={index}
+              className={`w-full cursor-pointer flex md:w-[25rem] flex-col my-border-radius p-9 justify-center text-center items-center shadow-lg ${activeTab === index ? 'bg-[#EDF6FF]' : 'text-yellow'}`}
+              onClick={() => setActiveTab(index)}
+              style={{ height: '15rem', flexGrow: 1, }}
+            >
               <p className='text-xl md:text-2xl font-semibold'>{criterion.title}</p>
               <p className='stretch w-full text-md md:text-lg'>{criterion.description}</p>
               <p className="text-3xl flex items-center font-semibold capitalize mt-8">
@@ -265,7 +273,7 @@ function TotalMembersTable({ users }: any) {
     );
   };
 
-  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => {}
+  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => { }
 
   return (
     <div>Total Members</div>
@@ -321,12 +329,11 @@ function PendingRequestsTable({ users }: any) {
     setStatusFilter(value);
   };
 
-  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => {}
+  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => { }
 
   return (
-    <div>Pending Requests</div>
+    <></>
   );
-
 }
 
 function UserOverview({ user }: any) {
@@ -365,7 +372,7 @@ function UserOverview({ user }: any) {
         <h1 className='font-semibold text-2xl md:text-3xl mb-6'>{`Welcome ${user.name},`}</h1>
         <p className='max-w-lg text-lg md:text-2xl'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
       </div>
-      <div className="gap-9 flex flex-col md:flex-row justify-center items-center">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-9 ">
         {criteria.map((criterion, index) => (
           <div key={index} className={`w-full flex flex-col my-border-radius shadow-lg p-5 justify-center items-start ${criterion.color}`}>
             <div className="w-full flex items-start justify-between justified-element">
