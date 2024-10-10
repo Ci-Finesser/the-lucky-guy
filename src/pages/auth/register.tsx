@@ -117,7 +117,7 @@ export default function RegistrationFlow() {
 
     const handleSubmit = (e: any) => {
         e.preventDefault()
-        const { nin, vcn, accountNumber } = formData
+        const { nin, vcn, accountNumber, bank } = formData
         if (!nin || !vcn) {
             setErrorMsg('NIN & VCN are required')
             return
@@ -133,7 +133,7 @@ export default function RegistrationFlow() {
             return
         }
 
-        if (accountNumber && accountNumber.length < 10){
+        if (bank && accountNumber && accountNumber.length < 10){
             setErrorMsg("Invalid account number")
             return
         }
