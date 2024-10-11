@@ -59,7 +59,9 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
     { label: 'Dashboard', content: <UserOverview user={user} events={allEvents} /> },
     { label: 'Wallet', content: <WalletView balance={user.walletBalance} /> }, // Pass balance here
     { label: 'Events', content: <UserEvents events={allEvents} /> }, // Replace with actual content
-    { label: 'Community', content: <div>Community Content</div> }, // Replace with actual content
+    { label: 'Community', content:  <div className="flex justify-center items-center h-full">
+      <h2 className="text-2xl font-semibold text-gray-600">Coming Soon</h2>
+    </div> }, // Replace with actual content
   ];
 
 
@@ -67,7 +69,7 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
     { label: 'Dashboard', content: <AdminOverview user={user} users={allUsers} events={allEvents} /> },
     { label: 'Members', content: <AdminMembers user={user} users={allUsers} /> },
     { label: 'Funds', content: <FundManagement /> },
-    { label: 'Messaging', content: <><div>Messaging Content</div></> },
+    { label: 'Messaging', content: <div>Messaging Content</div> },
   ];
 
   const navItems = isAdmin ? adminNavItems : userNavItems;
@@ -146,7 +148,7 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
           </div>
         </div>
       </header>
-      <main className="mt-10 flex justify-center items-start">
+      <main className="mt-10 flex justify-center items-center">
         <AnimatePresence>
           {navItems[activeTab].content}
         </AnimatePresence>
@@ -556,18 +558,9 @@ function FundManagement() {
 
 function WalletView({ balance }: any) {
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Your Wallet</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="text-3xl font-bold mb-4">₦{balance.toFixed(2)}</div>
-        <div className="space-y-2">
-          <Button className="w-full">Request Funds</Button>
-          <Button variant="outline" className="w-full">View Transactions</Button>
-        </div>
-      </CardContent>
-    </Card>
+    <div className="flex justify-center items-center h-full">
+      <h2 className="text-2xl font-semibold text-gray-600">Coming Soon</h2>
+    </div>
   )
 }
 
