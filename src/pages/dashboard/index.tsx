@@ -41,12 +41,13 @@ const tabUnderlineVariants = {
 
 
 
-export default function Dashboard({ user, allUsers }: any) {
+export default function Dashboard({ user, allUsers, allEvents }: any) {
   const [activeTab, setActiveTab] = useState(0);
 
   console.log('Client User: ', user);
 
   console.log('All users count: ', allUsers.length);
+  console.log('All events count: ', allEvents.length);
 
   const isAdmin = user.role === 'admin'
 
@@ -55,15 +56,15 @@ export default function Dashboard({ user, allUsers }: any) {
   };
 
   const userNavItems = [
-    { label: 'Dashboard', content: <UserOverview user={user} /> },
+    { label: 'Dashboard', content: <UserOverview user={user} events={allEvents} /> },
     { label: 'Wallet', content: <WalletView balance={user.walletBalance} /> }, // Pass balance here
-    { label: 'Events', content: <div>Events Content</div> }, // Replace with actual content
+    { label: 'Events', content: <UserEvents events={allEvents} /> }, // Replace with actual content
     { label: 'Community', content: <div>Community Content</div> }, // Replace with actual content
   ];
 
 
   const adminNavItems = [
-    { label: 'Dashboard', content: <AdminOverview user={user} users={allUsers} /> },
+    { label: 'Dashboard', content: <AdminOverview user={user} users={allUsers} events={allEvents} /> },
     { label: 'Members', content: <AdminMembers user={user} users={allUsers} /> },
     { label: 'Funds', content: <FundManagement /> },
     { label: 'Messaging', content: <><div>Messaging Content</div></> },
@@ -154,7 +155,7 @@ export default function Dashboard({ user, allUsers }: any) {
   )
 }
 
-function AdminOverview({ user, users }: any) {
+function AdminOverview({ user, users, events }: any) {
   const criteria = [
     {
       title: 'Total Members',
@@ -174,7 +175,7 @@ function AdminOverview({ user, users }: any) {
     {
       title: 'Active Campaign',
       description: 'ongoing campaign events',
-      value: `0`
+      value: events.filter((event: { status: string }) => event.status === 'active').length,
     },
   ];
   return (
@@ -336,7 +337,7 @@ function PendingRequestsTable({ users }: any) {
   );
 }
 
-function UserOverview({ user }: any) {
+function UserOverview({ user, events }: any) {
   const [showFundsData, setShowFundsData] = useState(false);
   const criteria = [
     {
@@ -351,7 +352,7 @@ function UserOverview({ user }: any) {
       icon: <CalendarRange color='white' size={24} />,
       color: 'criterion-2',
       description: 'Ongoing events',
-      value: 0,
+      value: events.filter((event: { status: string }) => event.status === 'active').length,
     },
     {
       title: 'Funds In Wallet',
@@ -410,6 +411,98 @@ function UserOverview({ user }: any) {
       </div>
     </div>
   )
+}
+interface EventsData {
+  _id: string;
+  title: string;
+  host: string;
+  venue: string;
+  time: string;
+  date: string;
+  attendies: [];
+  status: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+function UserEvents({ events }: { events: EventsData[] }) {
+  const [activeTab, setActiveTab] = useState(0);
+  const criteria = [
+    {
+      title: 'Active Events',
+      description: 'ongoing campaign events',
+      value: events.filter(event => event.status === 'active').length,
+      content: <UserEventsComponent events={events.filter(event => event.status === 'active')} />
+    },
+
+    {
+      title: 'concluded events',
+      description: 'ended campaign events',
+      value: events.filter(event => event.status === 'ended').length,
+      content: <UserEventsComponent events={events.filter(event => event.status === 'ended')} />
+    },
+  ];
+  return (
+    <div className=''>
+      <div className="welcome mb-20 px-4 md:px-0">
+        <h1 className='font-semibold text-2xl md:text-3xl mb-6'>Events</h1>
+        <p className='max-w-lg text-lg md:text-2xl'>Manage all events and activities</p>
+      </div>
+
+      <div className='flex flex-col justify-center items-center px-4 md:px-0'>
+        <div
+          className="gap-9 flex flex-col md:flex-row justify-center items-center md:px-12"
+          style={{ width: '90%' }}
+        >
+          {criteria.map((criterion, index) => (
+            <div
+              key={index}
+              className={`w-full cursor-pointer flex flex-col my-border-radius p-9 justify-center text-center items-center shadow-lg ${activeTab === index ? 'bg-[#FFECF5]' : 'text-yellow'}`}
+              onClick={() => setActiveTab(index)}
+              style={{ height: '15rem', flexGrow: 1, }}
+            >
+              <p className='text-xl md:text-2xl font-semibold capitalize'>{criterion.title}</p>
+              <p className='stretch w-full text-md md:text-lg capitalize'>{criterion.description}</p>
+              <p className="text-3xl flex items-center font-semibold capitalize mt-8">
+                {criterion.value}
+              </p>
+              {activeTab === index ? null : <p className='text-[#DE1978] underline mt-4 font-medium'>click to view</p>}
+            </div>
+          ))}
+        </div>
+        <div className='mt-10'>
+          <AnimatePresence>
+            {criteria[activeTab].content}
+          </AnimatePresence>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function UserEventsComponent({ events }: { events: any[] }) {
+  return (
+    <div className='gap-9 flex flex-col md:flex-row justify-center items-center'>
+      {events.map((event, index) => (
+        <div key={index} className='bg-white my-border-radius shadow-lg shadow-[#ffecf5] p-8 flex flex-col'>
+          <div className="flex justify-between items-center">
+            <p className="font-bold max-w-[70%]">{event.title}</p>
+            <div className="shadow p-3 my-border-radius">
+              <p className="text-md text-normal font-semibold uppercase">{event.time}</p>
+            </div>
+          </div>
+          <div className="capitalized font-semibold mt-4">Host: <span className='font-medium capitalized'> {event.host}</span></div>
+          <div className="capitalized font-semibold mt-4">Venue: <span className='font-medium capitalized'> {event.venue}</span></div>
+          <div className="capitalized font-semibold mt-4">Date: <span className='font-medium capitalized'> {event.date}</span></div>
+
+          <div className="flex mt-8 gap-2.5">
+            <Button className="px-6 py-2.5 mr-4 my-border-radius text-md text-white bg-[#de1878] font-semibold hover:bg-[#de1878]">Attend</Button>
+            <Button className='px-6 py-2.5 my-border-radius text-md font-semibold'>Not attending</Button>
+          </div>
+        </div>
+      ))}
+    </div>
+  );
 }
 
 function VerificationManagement() {
@@ -516,6 +609,7 @@ interface ExtendedRequest extends GetServerSidePropsContext {
 
 export const getServerSideProps = (async (context: GetServerSidePropsContext) => {
   let userData = null;
+  let eventsData = null;
   try {
     const session = await getIronSession<SessionData>(
       context.req,
@@ -538,17 +632,25 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
 
     await MongoDbConnection.connect();
     const usersCollection = await MongoDbConnection.getCollection('users');
+    const eventsCollection = await MongoDbConnection.getCollection('events');
+    const walletsCollection = await MongoDbConnection.getCollection('wallets');
     const user = await usersCollection.findOne({ _id: new ObjectId(sessionUser.id) });
     const allUsers = await usersCollection.find().toArray();
+    const allEvents = await eventsCollection.find().toArray();
 
-    if (user && allUsers) {
+    if (user && allUsers && allEvents) {
       userData = user;
       userData._id = userData._id.toString() as any;
       for (let r in allUsers) {
         allUsers[r]._id = allUsers[r]._id.toString() as any;
       }
+
+      for (let r in allEvents) {
+        allEvents[r]._id = allEvents[r]._id.toString() as any;
+      }
+
       // console.log('User: ', userData);
-      return { props: { user: userData, allUsers: allUsers } };
+      return { props: { user: userData, allUsers: allUsers, allEvents: allEvents } };
     }
 
     console.error('User not found in database:', sessionUser.id);

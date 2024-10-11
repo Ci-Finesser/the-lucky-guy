@@ -94,6 +94,11 @@ body {
   border-radius: 10px; /* Adjust border radius as needed */
 }
 
+.my-border-radius-events {
+  border: '#ffecf5'; /* Remove default button border */
+  border-radius: 10px; /* Adjust border radius as needed */
+}
+
 .my-border-radius-input {
   border-color: #afadad;
   border-width: 2px;
