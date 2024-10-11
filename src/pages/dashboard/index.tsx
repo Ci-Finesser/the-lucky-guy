@@ -493,7 +493,7 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ event_id: event_id, user_id: user._id}),
+      body: JSON.stringify({ event_id: event_id, user_id: user._id }),
     }).then(response => response.json()).then(resData => {
       setIsLoading(false)
       if (resData.status) {
@@ -511,7 +511,7 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ event_id: event_id, user_id: user._id}),
+      body: JSON.stringify({ event_id: event_id, user_id: user._id }),
     }).then(response => response.json()).then(resData => {
       setIsLoading(false)
       if (resData.status) {
@@ -525,11 +525,11 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
   const isUserAttendEvent = (event: any) => {
     return event.attendies.includes(user._id)
   }
-  
+
   return (
     <div className='gap-9 flex flex-col md:flex-row justify-center items-center'>
       {events.length ? events.map((event, index) => (
-        
+
         <div key={index} className='bg-white my-border-radius shadow-lg shadow-[#ffecf5] p-8 flex flex-col'>
           <div className="flex justify-between items-center">
             <p className="font-bold max-w-[70%]">{event.title}</p>
@@ -559,12 +559,17 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
                     </motion.span>
                   ) : (
                     <>
-                    {!isUserAttendEvent(event) ? <>Attend</> : <>Attending</>}
+                      {!isUserAttendEvent(event) ? <>Attend</> : <>Attending</>}
                     </>
                   )
                 }
               </Button>
-              <Button className='px-6 py-2.5 my-border-radius text-md font-semibold'>Not attending</Button>
+              <Button
+                className='px-6 py-2.5 my-border-radius text-md font-semibold'
+                onClick={() => handleNotAttendingEvent(event._id)}
+              >
+                Not attending
+              </Button>
             </div>
           )}
         </div>
