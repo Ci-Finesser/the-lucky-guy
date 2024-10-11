@@ -493,9 +493,10 @@ function UserEventsComponent({ events }: { events: any[] }) {
               <p className="text-md text-normal font-semibold uppercase">{event.time}</p>
             </div>
           </div>
-          <div className="capitalized font-semibold mt-4">Host: <span className='font-medium capitalized'> {event.host}</span></div>
-          <div className="capitalized font-semibold mt-4">Venue: <span className='font-medium capitalized'> {event.venue}</span></div>
-          <div className="capitalized font-semibold mt-4">Date: <span className='font-medium capitalized'> {event.date}</span></div>
+          <div className="border-b border-gray-500 border-dashed my-6"></div>
+          <div className="capitalized font-semibold">Host: <span className='font-medium capitalized'> {event.host}</span></div>
+          <div className="capitalized font-semibold my-4">Venue: <span className='font-medium capitalized'> {event.venue}</span></div>
+          <div className="capitalized font-semibold">Date: <span className='font-medium capitalized'> {event.date}</span></div>
 
           <div className="flex mt-8 gap-2.5">
             <Button className="px-6 py-2.5 mr-4 my-border-radius text-md text-white bg-[#de1878] font-semibold hover:bg-[#de1878]">Attend</Button>
