@@ -19,7 +19,7 @@ export default function Index() {
       <div
         className={`min-h-screen p-8 pb-20 gap-16 sm:p-20`}
       >
-        <header className='w-full h-20 flex items-center justify-between px-8'>
+        <header className='w-full h-20 flex items-center justify-between px-2 md:px-8'>
           <motion.div
             initial="hidden"
             animate="visible"
