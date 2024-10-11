@@ -10,7 +10,7 @@ import { Badge } from "@/components/ui/badge"
 import { Bell, BellDotIcon, Box, CalendarRange, CreditCard, Eye, EyeOff, FileText, Users, Wallet, WalletIcon } from 'lucide-react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Int32 } from 'mongodb'
-import { PiBellFill, PiBellZFill, PiBroadcastBold, PiCallBellFill, PiNotificationBold, PiNotificationFill } from 'react-icons/pi'
+import { PiBellFill, PiBellZFill, PiBroadcastBold, PiCallBellFill, PiNotificationBold, PiNotificationFill, PiSpinner } from 'react-icons/pi'
 import { GetServerSidePropsContext, NextApiRequest } from 'next'
 import { getIronSession, IronSession } from 'iron-session'
 import { getIronSessionData, SessionData, sessionOptions } from '@/lib/session'
@@ -58,10 +58,12 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
   const userNavItems = [
     { label: 'Dashboard', content: <UserOverview user={user} events={allEvents} /> },
     { label: 'Wallet', content: <WalletView balance={user.walletBalance} /> }, // Pass balance here
-    { label: 'Events', content: <UserEvents events={allEvents} /> }, // Replace with actual content
-    { label: 'Community', content:  <div className="flex justify-center items-center h-full">
-      <h2 className="text-2xl font-semibold text-gray-600">Coming Soon</h2>
-    </div> }, // Replace with actual content
+    { label: 'Events', content: <UserEvents events={allEvents} user={user} /> }, // Replace with actual content
+    {
+      label: 'Community', content: <div className="flex justify-center items-center h-full">
+        <h2 className="text-2xl font-semibold text-gray-600">Coming Soon</h2>
+      </div>
+    }, // Replace with actual content
   ];
 
 
@@ -427,21 +429,21 @@ interface EventsData {
   updatedAt: string;
 }
 
-function UserEvents({ events }: { events: EventsData[] }) {
+function UserEvents({ events, user }: { events: EventsData[], user: any }) {
   const [activeTab, setActiveTab] = useState(0);
   const criteria = [
     {
       title: 'Active Events',
       description: 'ongoing campaign events',
       value: events.filter(event => event.status === 'active').length,
-      content: <UserEventsComponent events={events.filter(event => event.status === 'active')} />
+      content: <UserEventsComponent events={events.filter(event => event.status === 'active')} user={user} />
     },
 
     {
       title: 'concluded events',
       description: 'ended campaign events',
       value: events.filter(event => event.status === 'ended').length,
-      content: <UserEventsComponent events={events.filter(event => event.status === 'ended')} />
+      content: <UserEventsComponent events={events.filter(event => event.status === 'ended')} user={user} />
     },
   ];
   return (
@@ -482,10 +484,52 @@ function UserEvents({ events }: { events: EventsData[] }) {
   );
 }
 
-function UserEventsComponent({ events }: { events: any[] }) {
+function UserEventsComponent({ events, user }: { events: any[], user: any }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const handleAttendEvent = async (event_id: string) => {
+    setIsLoading(true)
+    fetch('/api/attendEvent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ event_id: event_id, user_id: user._id}),
+    }).then(response => response.json()).then(resData => {
+      setIsLoading(false)
+      if (resData.status) {
+        alert('You have successfully attended the event')
+      } else {
+        alert(resData.message)
+      }
+    })
+  };
+
+  const handleNotAttendingEvent = async (event_id: string) => {
+    setIsLoading(true)
+    fetch('/api/notAttendingEvent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ event_id: event_id, user_id: user._id}),
+    }).then(response => response.json()).then(resData => {
+      setIsLoading(false)
+      if (resData.status) {
+        alert(resData.message)
+      } else {
+        alert(resData.message)
+      }
+    })
+  };
+
+  const isUserAttendEvent = (event: any) => {
+    return event.attendies.includes(user._id)
+  }
+  
   return (
     <div className='gap-9 flex flex-col md:flex-row justify-center items-center'>
-      {events.map((event, index) => (
+      {events.length ? events.map((event, index) => (
+        
         <div key={index} className='bg-white my-border-radius shadow-lg shadow-[#ffecf5] p-8 flex flex-col'>
           <div className="flex justify-between items-center">
             <p className="font-bold max-w-[70%]">{event.title}</p>
@@ -498,12 +542,37 @@ function UserEventsComponent({ events }: { events: any[] }) {
           <div className="capitalized font-semibold my-4">Venue: <span className='font-medium capitalized'> {event.venue}</span></div>
           <div className="capitalized font-semibold">Date: <span className='font-medium capitalized'> {event.date}</span></div>
 
-          <div className="flex mt-8 gap-2.5">
-            <Button className="px-6 py-2.5 mr-4 my-border-radius text-md text-white bg-[#de1878] font-semibold hover:bg-[#de1878]">Attend</Button>
-            <Button className='px-6 py-2.5 my-border-radius text-md font-semibold'>Not attending</Button>
-          </div>
+          {event.status === 'active' && (
+            <div className="flex mt-8 gap-2.5">
+              <Button
+                disabled={isLoading || isUserAttendEvent(event)}
+                className="px-6 py-2.5 mr-4 my-border-radius text-md text-white bg-[#de1878] font-semibold hover:bg-[#de1878]"
+                onClick={() => handleAttendEvent(event._id)}
+              >
+                {
+                  isLoading ? (
+                    <motion.span
+                      animate={{ rotate: 360, transition: { duration: 1, repeat: Infinity } }}
+                      className="inline-block"
+                    >
+                      <PiSpinner className="animate-spin h-8 w-8 text-white" />
+                    </motion.span>
+                  ) : (
+                    <>
+                    {!isUserAttendEvent(event) ? <>Attend</> : <>Attending</>}
+                    </>
+                  )
+                }
+              </Button>
+              <Button className='px-6 py-2.5 my-border-radius text-md font-semibold'>Not attending</Button>
+            </div>
+          )}
         </div>
-      ))}
+      )) : <>
+        <div className="flex justify-center items-center h-full">
+          <h2 className="text-2xl font-semibold text-gray-600 capitalize">{`No events`}</h2>
+        </div>
+      </>}
     </div>
   );
 }
