@@ -554,7 +554,7 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
           <div className="capitalized font-semibold">Host: <span className='font-medium capitalized'> {event.host}</span></div>
           <div className="capitalized font-semibold my-4">Venue: <span className='font-medium capitalized'> {event.venue}</span></div>
           <div className="capitalized font-semibold">Date: <span className='font-medium capitalized'> {event.date}</span></div>
-
+          <div className="capitalized font-semibold my-4">Attendees: <span className='font-medium capitalized'> {event.attendies.length}</span></div>
           {event.status === 'active' && (
             <div className="flex mt-8 gap-2.5">
               <Button
