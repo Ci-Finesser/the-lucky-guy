@@ -343,13 +343,14 @@ function PendingRequestsTable({ users }: any) {
 
 function UserOverview({ user, events }: any) {
   const [showFundsData, setShowFundsData] = useState(false);
+
   const criteria = [
     {
       title: 'Campaigns',
       icon: <PiBroadcastBold color='white' size={24} />,
       color: 'criterion-1',
       description: 'Number of campaigns participating in',
-      value: 0,
+      value: events.filter((event: { attendies: any[] }) => event.attendies.includes(user._id)).length,
     },
     {
       title: 'Events',
@@ -370,6 +371,8 @@ function UserOverview({ user, events }: any) {
   const toggleFundsDataVisibility = () => {
     setShowFundsData(!showFundsData);
   };
+
+
 
   return (
     <div className="space-y-4 mt-20 px-4 md:px-0">
