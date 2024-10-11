@@ -10,7 +10,7 @@ export default function EligibilitySection() {
 
   const criteria = [
     {
-        title: 'Be between 18-45 years of age',
+        title: 'Be 18 years and above',
         icon: <HourglassIcon color='white' size={20} />,
         description: 'You must be within the eligible age range to participate in the movement.',
       },

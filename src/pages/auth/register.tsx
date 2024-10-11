@@ -162,7 +162,6 @@ export default function RegistrationFlow() {
                 }, 3000);
             }
         })
-
     }
 
     const togglePasswordVisibility = () => {

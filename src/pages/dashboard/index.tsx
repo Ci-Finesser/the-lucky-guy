@@ -162,8 +162,8 @@ function AdminOverview({ user, users }: any) {
       value: users.length,
     },
     {
-      title: 'Pending Requests',
-      description: 'Number of pending members',
+      title: 'Pending Verifications',
+      description: 'Number of pending member verifications',
       value: users.filter((userData: any) => userData.verificationStatus === 'pending').length,
     },
     {
@@ -210,8 +210,8 @@ function AdminMembers({ user, users }: any) {
       content: <TotalMembersTable users={users} />
     },
     {
-      title: 'Pending Requests',
-      description: 'Number of pending members',
+      title: 'Pending Verifications',
+      description: 'Number of pending member verifications',
       value: users.filter((userData: any) => userData.verificationStatus === 'pending').length,
       content: <PendingRequestsTable users={users} />
     },
