@@ -376,12 +376,12 @@ function UserOverview({ user, events }: any) {
 
 
   return (
-    <div className="space-y-4 mt-20 px-4 md:px-0">
+    <div className="space-y-4 mt-12 md:mt-20 px-4 md:px-0 mb-20">
       <div className="welcome mb-20">
         <h1 className='font-semibold text-2xl md:text-3xl mb-6'>{`Welcome ${user.name},`}</h1>
         <p className='max-w-lg text-lg md:text-2xl'>Here’s a quick snapshot of campaign activity, use the menu above to navigate through your account, see upcoming events and engagements.</p>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-9 ">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-9 mb-20">
         {criteria.map((criterion, index) => (
           <div key={index} className={`w-full flex flex-col my-border-radius shadow-lg p-5 justify-center items-start ${criterion.color}`}>
             <div className="w-full flex items-start justify-between justified-element">
