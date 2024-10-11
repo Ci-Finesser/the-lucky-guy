@@ -13,3 +13,9 @@ export function truncateString(str: string, maxLength: number) {
     return str;
   }
 }
+
+export function formateUserId(userId: string) {
+  const firstThree = userId.substring(0, 3);
+  const lastTwo = userId.substring(userId.length - 2);
+  return firstThree + lastTwo
+}

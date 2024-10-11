@@ -17,8 +17,22 @@ import { getIronSessionData, SessionData, sessionOptions } from '@/lib/session'
 import { Tlg, TlgIcon } from '@/components/apc-flag'
 import MongoDbConnection from "@/lib/database";
 import { ObjectId } from 'mongodb';
-import { truncateString } from '@/lib/utils'
+import { formateUserId, truncateString } from '@/lib/utils'
 import { useRouter } from 'next/router'
+
+import {
+  Table,
+  Thead,
+  Tbody,
+  Tr,
+  Th,
+  Td,
+  TableContainer,
+  Select,
+  Box as TableBox,
+  TableCaption
+} from '@chakra-ui/react';
+import { auth } from 'google-auth-library'
 
 const dashboardHeaderVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -224,7 +238,7 @@ function AdminMembers({ user, users }: any) {
   ];
   return (
     <>
-      <div className='flex flex-col justify-start items-center px-4 md:px-0'>
+      <div className='flex flex-col justify-start items-end px-4 md:px-0'>
         <div
           className="gap-9 flex flex-col md:flex-row justify-center items-center"
           style={{ width: '100%' }}
@@ -244,7 +258,7 @@ function AdminMembers({ user, users }: any) {
             </div>
           ))}
         </div>
-        <div className='mt-10'>
+        <div className='mt-10 overflow-x-auto overflow-y-auto'>
           <AnimatePresence>
             {criteria[activeTab].content}
           </AnimatePresence>
@@ -255,9 +269,11 @@ function AdminMembers({ user, users }: any) {
 }
 
 function TotalMembersTable({ users }: any) {
-  const [sortDirection, setSortDirection] = useState('asc');
-  const [sortField, setSortField] = useState('name');
+  const [sortDirection, setSortDirection] = useState<'asc' | 'desc' | null>(null);
+  const [sortField, setSortField] = useState<keyof User | null>(null);
   const [filteredUsers, setFilteredUsers] = useState(users);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [statusFilter, setStatusFilter] = useState<string | null>(null);
 
   const handleSort = (field: string) => {
     if (sortField === field) {
@@ -279,10 +295,59 @@ function TotalMembersTable({ users }: any) {
     );
   };
 
-  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => { }
-
   return (
-    <div>Total Members</div>
+    <div className="overflow-x-auto overflow-y-auto max-h-[500px] w-full shadow-lg">
+      {/* <TableContainer className=''> */}
+      <table className="w-full table-auto text-sm md:text-base">
+        <thead>
+          <tr className="text-left sticky fixed text-lg">
+            <th
+              onClick={() => handleSort('name')}
+              className="cursor-pointer px-4 py-2 font-bold"
+            >
+              Name <span className='text-xs'>{sortField === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}</span>
+            </th>
+            <th
+              onClick={() => handleSort('email')}
+              className="cursor-pointer px-4 py-2 font-bold"
+            >
+              Email <span className='text-xs'>{sortField === 'email' && (sortDirection === 'asc' ? '▲' : '▼')}</span>
+            </th>
+            <th
+              className="cursor-pointer px-4 py-2 font-bold"
+            >
+              NIN Number
+            </th>
+            <th
+              className="cursor-pointer px-4 py-2 font-bold"
+            >
+              {`Status`}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredUsers
+            .filter((user: { verificationStatus: string | null }) => user.verificationStatus === statusFilter || !statusFilter)
+            .filter((user: { name: string; email: string }) =>
+              user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              user.email.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((user: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; email: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; nin: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined }, index: React.Key | null | undefined) => (
+              <tr key={index} className={`h-[5rem] font-semibold ${index as any % 2 === 0 ? 'bg-gray-100' : ''}`}>
+                <td className="px-4 py-2 whitespace-nowrap">{user.name}</td>
+                <td className="px-4 py-2 justify-self-left whitespace-nowrap">{user.email}</td>
+                <td className="px-4 py-2 whitespace-nowrap">{user.nin}</td>
+                <td className="px-4 py-2 whitespace-nowrap">
+                  <div className='my-border-radius p-2 shadow-lg text-white bg-[#1B354F] hover:bg-[#1B354F] capitalize font-bold'>
+                    Approved
+                  </div>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+      {/* </TableContainer> */}
+    </div>
   );
 }
 interface User {
@@ -295,6 +360,7 @@ interface User {
   poll_unit: string;
   verificationStatus: 'pending' | 'verified' | 'rejected';
   createdAt: Date;
+  [key: string]: any
 }
 
 
@@ -327,18 +393,67 @@ function PendingRequestsTable({ users }: any) {
     );
   };
 
-  const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(event.target.value);
-  };
-
-  const handleStatusFilterChange = (value: string) => {
-    setStatusFilter(value);
-  };
-
-  const handleFilter = (event: React.FormEvent<HTMLInputElement>) => { }
-
   return (
-    <></>
+    <div className="overflow-x-auto overflow-y-auto max-h-[500px] shadow-lg">
+      {/* <TableContainer className=''> */}
+      <table className="w-full table-auto text-sm md:text-base">
+        <thead className=''>
+          <tr className="text-left sticky fixed text-lg">
+            <th
+              onClick={() => handleSort('name')}
+              className="cursor-pointer px-4 py-2 font-semibold"
+            >
+              Name <span className='text-xs'>{sortField === 'name' && (sortDirection === 'asc' ? '▲' : '▼')}</span>
+            </th>
+            <th
+              onClick={() => handleSort('email')}
+              className="cursor-pointer px-4 py-2 font-semibold"
+            >
+              Email <span className='text-xs'>{sortField === 'email' && (sortDirection === 'asc' ? '▲' : '▼')}</span>
+            </th>
+            <th
+              className="cursor-pointer px-4 py-2 font-semibold"
+            >
+              NIN Number
+            </th>
+            <th
+              className="cursor-pointer px-4 py-2 font-semibold"
+            >
+              {`Details (Action)`}
+            </th>
+            <th
+              className="cursor-pointer px-4 py-2 font-semibold"
+            >
+              {`Status (Action)`}
+            </th>
+          </tr>
+        </thead>
+        <tbody>
+          {filteredUsers
+            .filter((user: { verificationStatus: string | null }) => user.verificationStatus === statusFilter || !statusFilter)
+            .filter((user: { name: string; email: string }) =>
+              user.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+              user.email.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((user: { name: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; email: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined; nin: string | number | bigint | boolean | React.ReactElement<any, string | React.JSXElementConstructor<any>> | Iterable<React.ReactNode> | React.ReactPortal | Promise<React.AwaitedReactNode> | null | undefined }, index: React.Key | null | undefined) => (
+              <tr key={index} className={`h-[5rem] font-semibold ${index as any % 2 === 0 ? 'bg-gray-100' : ''}`}>
+                <td className="px-4 py-2">{user.name}</td>
+                <td className="px-4 py-2">{user.email}</td>
+                <td className="px-4 py-2">{user.nin}</td>
+                <td className="px-4 py-2 text-center">
+                  <Button className='my-border-radius shadow-lg capitalize font-semibold'>view</Button>
+                </td>
+                <td className="px-4 py-2 text-center">
+                  <Button className='my-border-radius shadow-lg text-white bg-[#ff9d00] hover:bg-[#ff9d00] capitalize font-bold'>
+                    Approve
+                  </Button>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
+      {/* </TableContainer> */}
+    </div>
   );
 }
 
@@ -372,8 +487,6 @@ function UserOverview({ user, events }: any) {
   const toggleFundsDataVisibility = () => {
     setShowFundsData(!showFundsData);
   };
-
-
 
   return (
     <div className="space-y-4 mt-12 md:mt-20 px-4 md:px-0 mb-20">
