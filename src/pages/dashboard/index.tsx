@@ -18,6 +18,7 @@ import { Tlg, TlgIcon } from '@/components/apc-flag'
 import MongoDbConnection from "@/lib/database";
 import { ObjectId } from 'mongodb';
 import { truncateString } from '@/lib/utils'
+import { useRouter } from 'next/router'
 
 const dashboardHeaderVariants = {
   hidden: { opacity: 0, y: 10 },
@@ -488,7 +489,14 @@ function UserEvents({ events, user }: { events: EventsData[], user: any }) {
 }
 
 function UserEventsComponent({ events, user }: { events: any[], user: any }) {
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
   const [isLoading, setIsLoading] = useState(false);
+  const [isLoading2, setIsLoading2] = useState(false);
   const handleAttendEvent = async (event_id: string) => {
     setIsLoading(true)
     fetch('/api/attendEvent', {
@@ -498,6 +506,7 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
       },
       body: JSON.stringify({ event_id: event_id, user_id: user._id }),
     }).then(response => response.json()).then(resData => {
+      refreshData();
       setIsLoading(false)
       if (resData.status) {
         alert('You have successfully attended the event')
@@ -508,7 +517,7 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
   };
 
   const handleNotAttendingEvent = async (event_id: string) => {
-    setIsLoading(true)
+    setIsLoading2(true)
     fetch('/api/notAttendingEvent', {
       method: 'POST',
       headers: {
@@ -516,7 +525,8 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
       },
       body: JSON.stringify({ event_id: event_id, user_id: user._id }),
     }).then(response => response.json()).then(resData => {
-      setIsLoading(false)
+      refreshData();
+      setIsLoading2(false)
       if (resData.status) {
         alert(resData.message)
       } else {
@@ -536,7 +546,7 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
         <div key={index} className='bg-white my-border-radius shadow-lg shadow-[#ffecf5] p-8 flex flex-col'>
           <div className="flex justify-between items-center">
             <p className="font-bold max-w-[70%]">{event.title}</p>
-            <div className="shadow p-3 my-border-radius">
+            <div className="shadow-lg p-3 my-border-radius">
               <p className="text-md text-normal font-semibold uppercase">{event.time}</p>
             </div>
           </div>
@@ -568,8 +578,12 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
                 }
               </Button>
               <Button
+                disabled={isLoading2 || !isUserAttendEvent(event)}
                 className='px-6 py-2.5 my-border-radius text-md font-semibold'
-                onClick={() => handleNotAttendingEvent(event._id)}
+                onClick={() => {
+                  handleNotAttendingEvent(event._id)
+                  !isUserAttendEvent(event)
+                }}
               >
                 Not attending
               </Button>
