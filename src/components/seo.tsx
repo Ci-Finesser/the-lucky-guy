@@ -14,7 +14,7 @@ export default function SEO({ title, description, ogImage, keywords }: SEOProps)
     const defaultTitle = "The Lucky Guy Youth Movement -  Empowering Ondo’s Youth For A Brighter Future";
     const defaultDescription = "Join us in supporting Governor Lucky Orimisan Aiyedatiwa’s vision for progress and development in Ondo State."
     const defaultOGImage = '/assets/tlg-og.jpg'
-    const defaultKeywords = "Ondo state, Ondo government, Ondo, Youth, The Lucky Guy, Youth Movement, Governor, Lucky Orimisan Aiyedatiwa, Orimisan, Aiyedatiwa, Lucky, Lucky Guy"
+    const defaultKeywords = "Lucky Guy Youth movement,Ondo state, Ondo government Youth Movement, Ondo Youth Movement, Youth, The Lucky Guy Lucky Guy Youth Movement,The Lucky Guy Youth Movement, Governor, Lucky Orimisan Aiyedatiwa, Orimisan, Aiyedatiwa, Lucky, Lucky Guy"
     title = title || defaultTitle
     description = description || defaultDescription
     ogImage = ogImage || defaultOGImage

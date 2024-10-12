@@ -177,7 +177,7 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
       <main className="mt-10 flex justify-center items-center">
         <AnimatePresence>
           {isUserModalOpen && (
-            <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="fixed inset-0 flex items-center justify-center z-50 bg-black/50 backdrop-blur-sm">
               <ProfileView user={user} onClose={() => setIsUserModalOpen(false)} />
             </div>
           )}
