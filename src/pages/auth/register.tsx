@@ -85,6 +85,11 @@ export default function RegistrationFlow() {
                 return
             }
 
+            if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+                setErrorMsg('Please enter a valid email address')
+                return
+            }
+
             if (!terms) {
                 setErrorMsg('Please agree to the terms and conditions')
                 return

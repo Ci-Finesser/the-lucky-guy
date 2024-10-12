@@ -19,3 +19,8 @@ export function formateUserId(userId: string) {
   const lastTwo = userId.substring(userId.length - 2);
   return firstThree + lastTwo
 }
+
+export function isValidEmailFormat( email: string) {
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return emailRegex.test(email);
+}

@@ -38,6 +38,13 @@ export default function SignIn() {
 
   const handleSubmit = (e: any) => {
     e.preventDefault()
+    const { email } = formData
+
+    if (!email.match(/^[^\s@]+@[^\s@]+\.[^\s@]+$/)) {
+      setErrorMsg('Please enter a valid email address')
+      return
+    }
+
     setIsLoading(true)
     fetch('/api/auth/submitLoginData', {
       method: 'POST',
@@ -78,7 +85,7 @@ export default function SignIn() {
         >
           <div className="flex items-center space-x-4">
             <div className="rounded-full shadow">
-            <TlgIcon />
+              <TlgIcon />
             </div>
           </div>
         </motion.div>
@@ -185,7 +192,7 @@ export const getServerSideProps = (async (context: GetServerSidePropsContext) =>
     );
 
     if (!session.isLoggedIn) {
-      return {props: { data: null }};
+      return { props: { data: null } };
     }
 
     const sessionUser = session.user;
