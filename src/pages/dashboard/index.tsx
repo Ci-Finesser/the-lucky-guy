@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -58,6 +58,7 @@ const tabUnderlineVariants = {
 
 export default function Dashboard({ user, allUsers, allEvents }: any) {
   const [activeTab, setActiveTab] = useState(0);
+  const [isUserModalOpen, setIsUserModalOpen] = useState(false);
 
   console.log('Client User: ', user);
 
@@ -69,6 +70,18 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
   const handleTabClick = (index: string) => {
     setActiveTab(Number(index));
   };
+
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+
+  // refresh data every 5 seconds
+  useEffect(() => {
+    const interval = setInterval(refreshData, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   const userNavItems = [
     { label: 'Dashboard', content: <UserOverview user={user} events={allEvents} /> },
@@ -146,32 +159,159 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
           <span className="p-3 rounded-full flex items-center justify-center bg-gray-100 mx-4">
             <PiBellFill color='black' size={24} />
           </span>
-          <Avatar>
-            <AvatarImage
-              src="https://via.placeholder.com/32x32"
-              alt={user.name}
-            />
-            <AvatarFallback>
-              {user.name.split('').map((n: any) => n[0]).join('')}
-            </AvatarFallback>
-          </Avatar>
-          <div className="flex flex-col">
-            <div className="flex items-center space-x-2 font-semibold">
-              {user.name}
-            </div>
-            <div className="flex items-center space-x-2 text-gray-500">
-              {isAdmin ? user.email : 'TLG Member'}
+          <div className='flex items-center gap-4 cursor-pointer' onClick={() => setIsUserModalOpen(true)}>
+            <Avatar className='w-12 h-12 '>
+              <AvatarFallback className="rounded-full bg-gray-100 font-bold">
+                {user.name.split(' ').map((n: any) => n[0]).join('')}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex flex-col">
+              <div className="flex items-center space-x-2 font-semibold">
+                {user.name}
+              </div>
+              <div className="flex items-center space-x-2 text-gray-500">
+                {isAdmin ? user.email : 'TLG Member'}
+              </div>
             </div>
           </div>
         </div>
       </header>
       <main className="mt-10 flex justify-center items-center">
         <AnimatePresence>
+          {isUserModalOpen && (
+            <div className="fixed inset-0 flex items-center justify-center z-50">
+              <ProfileView user={user} onClose={() => setIsUserModalOpen(false)} />
+            </div>
+          )}
           {navItems[activeTab].content}
         </AnimatePresence>
       </main>
     </div>
   )
+}
+
+function ProfileView({ user, onClose }: any) {
+  const router = useRouter();
+
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
+  const onEditDetails = () => { }
+  const isAdmin = user.role === 'admin'
+  const isVerified = user.verificationStatus === 'verified'
+  const onLogout = () => {
+    fetch('/api/auth/logOut').then(response => response.json()).then((resData: any) => {
+      if (resData.status) {
+        refreshData();
+      }
+    })
+  }
+  return (
+    <div className="relative bg-white my-border-radius shadow-lg border border-[#e2e2e2] p-8 flex flex-col items-center max-w-md w-full">
+      {/* Close Button (Optional) */}
+      <button
+        className="absolute top-4 right-4 text-white text-bold w-6 h-6 p-0.5 justify-center rounded-full items-center inline-flex bg-[#1b354f]"
+        onClick={onClose}
+      >
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className="h-6 w-6"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+        >
+          <path
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth={2}
+            d="M6 18L18 6M6 6l12 12"
+          />
+        </svg>
+      </button>
+
+      <div className="mb-6 w-full flex flex-col items-center">
+        <Avatar className="w-24 h-24 mb-3 text-center">
+          <AvatarFallback className="rounded-full bg-gray-100 text-3xl font-bold">
+            {user.name.split(' ').map((n: any) => n[0]).join('')}
+          </AvatarFallback>
+        </Avatar>
+        <h2 className="text-lg font-semibold text-center">{user.name}</h2>
+        <p className="text-sm text-gray-600 text-center">TLG {isAdmin ? 'Administrator' : 'Member'}</p>
+        <div className={`mt-2 px-4 py-2  ${ isVerified ? 'bg-[#1b354f]' : 'bg-[#ff9d00]'} rounded-2xl text-white text-center text-xs font-semibold`}>
+          {isVerified ? 'Verified' : 'Not verified'}
+        </div>
+      </div>
+
+      {/* User Details */}
+      <div className="space-y-4 w-full">
+        <div>
+          <p className="text-md font-semibold text-[#1b354f] capitalize">Local Government Area</p>
+          <p className="text-sm text-center font-medium bg-neutral-50 border border-[#dfdfdf] rounded p-3">
+            {user.localGovernment}
+          </p>
+        </div>
+        <div className='flex justify-between gap-4'>
+          <div className='max-w-sm'>
+            <p className="text-md font-semibold text-[#1b354f] capitalize">Ward</p>
+            <p className="text-sm text-center w-full font-medium bg-neutral-50 border border-[#dfdfdf] rounded p-3">
+              {user.ward}
+            </p>
+          </div>
+          <div className='w-full max-w-[70%]'>
+            <p className="text-md font-semibold text-[#1b354f] capitalize">Polling Unit</p>
+            <p className="text-sm text-center font-medium bg-neutral-50 border border-[#dfdfdf] rounded p-3">
+              {truncateString(user.poll_unit, 25)}
+            </p>
+          </div>
+        </div>
+
+        <div>
+          <p className="text-md font-semibold text-[#1b354f] capitalize">
+            Voter Registration Number
+          </p>
+          <p className="text-sm text-center font-medium bg-neutral-50 border border-[#dfdfdf] rounded p-3">
+            {user.vcn}
+          </p>
+        </div>
+        <div>
+          <p className="text-md font-semibold text-[#1b354f] capitalize">NIN</p>
+          <p className="text-sm text-center font-medium bg-neutral-50 border border-[#dfdfdf] rounded p-3">
+            {user.nin}
+          </p>
+        </div>
+        <div>
+          <p className="text-md font-semibold text-[#1b354f] capitalize">Account Details</p>
+          <div className="bg-neutral-50 border border-[#dfdfdf] rounded p-3 flex justify-between gap-1">
+            <p className="text-sm font-medium">{user.name}</p>
+            <p className="text-sm font-medium">{user.bank}</p>
+            <p className="text-sm font-medium">
+              {truncateString(user.accountNumber, 10)}
+            </p>
+          </div>
+        </div>
+      </div>
+
+      {/* Action Buttons */}
+      <div className="mt-8 flex justify-between w-full">
+        {onEditDetails && (
+          <button
+            className="text-sm font-medium text-[#1b354f] underline"
+            onClick={onEditDetails}
+          >
+            Edit Details
+          </button>
+        )}
+        {onLogout && (
+          <button
+            className="text-sm font-medium text-[#fd2104] underline"
+            onClick={onLogout}
+          >
+            Log Out
+          </button>
+        )}
+      </div>
+    </div>
+  );
 }
 
 function AdminOverview({ user, users, events }: any) {
@@ -769,36 +909,6 @@ function WalletView({ balance }: any) {
   )
 }
 
-function ProfileView({ user }: any) {
-  return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Your Profile</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <form className="space-y-4">
-          <div>
-            <Label htmlFor="name">Full Name</Label>
-            <Input id="name" defaultValue={user.name} />
-          </div>
-          <div>
-            <Label htmlFor="occupation">Occupation</Label>
-            <Input id="occupation" defaultValue={user.occupation} />
-          </div>
-          <div>
-            <Label htmlFor="local-government">Local Government</Label>
-            <Input id="local-government" defaultValue={user.localGovernment} disabled />
-          </div>
-          <div>
-            <Label htmlFor="ward">Ward</Label>
-            <Input id="ward" defaultValue={user.ward} disabled />
-          </div>
-          <Button type="submit">Update Profile</Button>
-        </form>
-      </CardContent>
-    </Card>
-  )
-}
 interface ExtendedRequest extends GetServerSidePropsContext {
   req: GetServerSidePropsContext['req'] & {
     session: IronSession<SessionData>;

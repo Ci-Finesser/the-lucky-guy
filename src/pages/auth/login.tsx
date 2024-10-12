@@ -100,7 +100,7 @@ export default function SignIn() {
               Welcome Back
             </div>
             <div className="text-neutral-500 font-medium capitalize">
-              Create your account to get involved and join the movement
+              Sign into your account to get involved and join the movement
             </div>
           </div>
 
