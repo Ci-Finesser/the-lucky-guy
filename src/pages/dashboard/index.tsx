@@ -77,9 +77,8 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
     router.replace(router.asPath);
   };
 
-  // refresh data every 5 seconds
   useEffect(() => {
-    const interval = setInterval(refreshData, 5000);
+    const interval = setInterval(refreshData, 10000);
     return () => clearInterval(interval);
   }, []);
 
@@ -93,7 +92,6 @@ export default function Dashboard({ user, allUsers, allEvents }: any) {
       </div>
     }, // Replace with actual content
   ];
-
 
   const adminNavItems = [
     { label: 'Dashboard', content: <AdminOverview user={user} users={allUsers} events={allEvents} /> },
