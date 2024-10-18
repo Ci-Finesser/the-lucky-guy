@@ -3,14 +3,30 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { useForm } from 'react-hook-form';
 import { SendIcon } from './apc-flag';
+import { motion } from 'framer-motion';
+import { PiSpinner } from 'react-icons/pi';
 
 export default function SubscriptionSection() {
     const [isSubscribed, setIsSubscribed] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
     const { register, handleSubmit, formState: { errors } } = useForm();
 
     const onSubmit = async (data: any) => {
-        console.log(data);
-        setIsSubscribed(true);
+        setIsLoading(true)
+        fetch('/api/emailSubscription', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(data)
+        }).then((response) => response.json()).then((data) => {
+            if (!data.status) {
+                setIsLoading(false)
+                console.log(JSON.stringify(data));
+            } else {
+                setIsLoading(false)
+                console.log(JSON.stringify(data));
+                setIsSubscribed(true);
+            }
+        })
     };
 
     return (
@@ -40,14 +56,19 @@ export default function SubscriptionSection() {
                             })}
                         />
                         {errors.email && <span className="text-red-500">{errors.root?.message}</span>}
-                        <button type="submit" className="subscribe-button h-[3.5rem] mt-4">
-                            <SendIcon color='white' />
+                        <button type="submit" className="subscribe-button h-[3.5rem] mt-4" disabled={isLoading}>
+                            {isLoading ? <motion.span
+                                animate={{ rotate: 360, transition: { duration: 1, repeat: Infinity } }}
+                                className="inline-block"
+                            >
+                                <PiSpinner className="animate-spin h-8 w-8 text-white" />
+                            </motion.span> : <SendIcon color='white' />}
                         </button>
                     </div>
                 </form>
             )}
             {isSubscribed && (
-                <div className="text-center text-green-500 font-medium">
+                <div className="text-center text-green-500 font-bold">
                     You are now subscribed!
                 </div>
             )}
