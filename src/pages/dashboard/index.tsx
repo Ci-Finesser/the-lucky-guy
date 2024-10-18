@@ -20,20 +20,6 @@ import { ObjectId } from 'mongodb';
 import { formateUserId, truncateString } from '@/lib/utils'
 import { useRouter } from 'next/router'
 
-import {
-  Table,
-  Thead,
-  Tbody,
-  Tr,
-  Th,
-  Td,
-  TableContainer,
-  Select,
-  Box as TableBox,
-  TableCaption
-} from '@chakra-ui/react';
-import { auth } from 'google-auth-library'
-
 const dashboardHeaderVariants = {
   hidden: { opacity: 0, y: 10 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.3 } },
@@ -59,11 +45,6 @@ const tabUnderlineVariants = {
 export default function Dashboard({ user, allUsers, allEvents }: any) {
   const [activeTab, setActiveTab] = useState(0);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
-
-  console.log('Client User: ', user);
-
-  console.log('All users count: ', allUsers.length);
-  console.log('All events count: ', allEvents.length);
 
   const isAdmin = user.role === 'admin'
 
@@ -194,6 +175,7 @@ function ProfileView({ user, onClose }: any) {
   const refreshData = () => {
     router.replace(router.asPath);
   };
+
   const onEditDetails = () => { }
   const isAdmin = user.role === 'admin'
   const isVerified = user.verificationStatus === 'verified'
@@ -853,25 +835,7 @@ function UserEventsComponent({ events, user }: { events: any[], user: any }) {
 function VerificationManagement() {
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>Pending Verifications</CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-4">
-          {[1, 2, 3].map((i) => (
-            <div key={i} className="flex items-center justify-between p-4 border rounded">
-              <div>
-                <p className="font-medium">User {i}</p>
-                <p className="text-sm text-muted-foreground">Submitted: 2023-07-{10 + i}</p>
-              </div>
-              <div>
-                <Button variant="outline" className="mr-2">View</Button>
-                <Button variant="default">Approve</Button>
-              </div>
-            </div>
-          ))}
-        </div>
-      </CardContent>
+
     </Card>
   )
 }

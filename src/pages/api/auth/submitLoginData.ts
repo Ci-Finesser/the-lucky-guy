@@ -11,8 +11,6 @@ async function handler(req: ExtendedRequest, res: NextApiResponse) {
         try {
             const { email, password } = req.body;
             // log email, password
-            console.log(`Email: ${email}, Password: ${password}`);
-
             await MongoDbConnection.connect();
             const usersCollection = await MongoDbConnection.getCollection('users');
 
